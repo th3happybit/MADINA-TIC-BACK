@@ -1,0 +1,10 @@
+Django
+Pillow
+gunicorn
+psycopg2
+djangorestframework
+django-rest-auth
+django-filter
+django-cors-headers
+django-allauth
+drf-yasg
