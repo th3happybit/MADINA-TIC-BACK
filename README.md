@@ -20,7 +20,7 @@ a django based backend for madina-tic project
 		- `sudo docker build -t madina-tic/backend:0.1 .`
 	2. change the settings of the database engine to sqlite.
 	3. run the container:
-		- `sudo docker run sudo docker run -d -p 8000:8000 madina-tic/backend:0.1`
+		- `sudo docker run -d -p 8000:8000 madina-tic/backend:0.1`
 
 ## docs
 
