@@ -1,6 +1,5 @@
 #!/bin/sh
 cd $APP_PATH
-
 # check if the database is ready
 echo "Waiting for Postgres DB"
 while ! pg_isready -h $PG_HOSTNAME > /dev/null 2>&1;

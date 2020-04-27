@@ -23,4 +23,4 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 
 #adding the django project
 RUN mkdir -p $APP_PATH
-COPY ./backend/ $APP_PATH
+COPY ./backend $APP_PATH
