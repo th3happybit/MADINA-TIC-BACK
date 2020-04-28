@@ -10,7 +10,7 @@ a django based backend for madina-tic project
 		- install django and other requirements:
 			- `sudo pip install -r requirements.txt`
 		- run server:
-			- `./manager.py runserver`
+			- `./manage.py runserver`
 
 ### docker deployment:
 	- requirements:
