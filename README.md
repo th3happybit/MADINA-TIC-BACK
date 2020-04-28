@@ -18,6 +18,8 @@ a django based backend for madina-tic project
 		2. install docker-compose tool [docs](https://docs.docker.com/compose/install/).
 	1. build the backend image:
 		- `sudo docker build -t madina-tic/backend:0.1 .`
+		or :
+		- sudo docker build -f Dockerfile -t madina-tic/backend:0.1 /full/path/to/
 	2. change the settings of the database engine to sqlite.
 	3. run the container:
 		- `sudo docker run -d -p 8000:8000 madina-tic/backend:0.1`
