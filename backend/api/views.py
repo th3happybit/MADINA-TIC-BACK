@@ -23,7 +23,7 @@ class UserView(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
 	lookup_field = 'uid'
-	filter_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
-	filterset_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
-	search_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
-	ordering_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
+	filter_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
+	filterset_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
+	search_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
+	ordering_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']

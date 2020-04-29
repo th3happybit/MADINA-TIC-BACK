@@ -87,6 +87,13 @@ class User(AbstractUser):
     role = models.CharField(max_length=200, choices=roles, default='Client')
     date_of_birth = models.DateField(default=datetime.date.today)
     address = models.CharField(max_length=200)
+    is_approved = models.BooleanField(
+        _('approved'),
+        default=False,
+        help_text=_(
+            'Designates whether this user should be treated as approved. '
+        ),
+    )
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
