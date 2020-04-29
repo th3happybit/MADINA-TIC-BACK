@@ -9,13 +9,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def userInstance(request):
-	if request.method == 'GET':
-		return Response({'user': UserSerializer(request.user).data})
-
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
 	permission_classes = [IsAdminUser]

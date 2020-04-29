@@ -50,7 +50,6 @@ urlpatterns = [
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),
-    url(r'api/userinstance/', views.userInstance, name='user'),
     # docs routes
    	url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    	url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

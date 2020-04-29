@@ -200,6 +200,10 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     "REGISTER_SERIALIZER": "api.serializers.CustomRegisterSerializer",
 }
 
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'api.serializers.UserProfileSerializer',
+}
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'basic': {
