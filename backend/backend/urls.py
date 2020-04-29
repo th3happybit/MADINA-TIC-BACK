@@ -26,6 +26,10 @@ from django.http import HttpResponse
 def empty_view(request):
     return HttpResponse('')
 
+# admin rest api routes
+router = routers.DefaultRouter()
+router.register(r'users', views.UserView)
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Madina-tic API",
@@ -42,6 +46,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
+    path('api/', include(router.urls)),
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),

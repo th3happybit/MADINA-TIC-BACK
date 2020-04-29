@@ -15,3 +15,15 @@ from rest_framework.response import Response
 def userInstance(request):
 	if request.method == 'GET':
 		return Response({'user': UserSerializer(request.user).data})
+
+# User Model View for admin access only
+class UserView(viewsets.ModelViewSet):
+	permission_classes = [IsAdminUser]
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
+	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+	lookup_field = 'uid'
+	filter_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
+	filterset_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
+	search_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
+	ordering_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_superuser','created_on']
