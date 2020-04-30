@@ -57,3 +57,67 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.save()
         clients.user_set.add(user)
         return user
+
+# Declaration  type serializer 
+class DeclarationTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeclarationType
+        fields = ['dtid', 'name', 'created_on']
+        lookup_field = 'dtid'
+
+# Declaration serializer
+class DeclarationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Declaration
+        fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+        lookup_field = ['did']
+
+# Declaration rejection serializer 
+class DeclarationRejectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeclarationRejection
+        fields = ['drid', 'maire', 'reason', 'declaration', 'created_on']
+        lookup_field = ['drid']
+
+# Declaration complement demand serializer 
+class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeclarationComplementDemand
+        fields = ['dcid', 'maire', 'reason', 'declaration', 'created_on']
+        lookup_field = ['dcid']
+
+# Document serializer
+class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ['dmid', 'filetype', 'src', 'declaration', 'created_on']
+        lookup_field = ['dmid']
+
+# Report serializer 
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ['rid', 'declaration', 'title', 'desc', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
+        lookup_field = ['rid']
+
+# Report rejection serializer 
+class ReportRejectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportRejection
+        fields = ['rrid', 'maire', 'reason', 'report', 'created_on']
+        lookup_field = ['rrid']
+
+# Report complement demand 
+class ReportComplementDemandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportComplementDemand
+        fields = ['rcid', 'maire', 'report', 'reason', 'created_on']
+        lookup_field = ['rcid']
+
+
+# Announce serializer
+class AnnounceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Announce
+        fields = ['aid', 'title', 'desc', 'status', 'created_on', 'start_at', 'end_at']
+        lookup_field = ['aid']

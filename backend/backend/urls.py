@@ -29,6 +29,15 @@ def empty_view(request):
 # admin rest api routes
 router = routers.DefaultRouter()
 router.register(r'users', views.UserView)
+router.register(r'declarations_types', views.DeclarationTypeView)
+router.register(r'declarations', views.DeclarationView)
+router.register(r'declarations_rejection', views.DeclarationRejectionView)
+router.register(r'declarations_complement_demand', views.DeclarationComplementDemandView)
+router.register(r'documents', views.DocumentView)
+router.register(r'reports', views.ReportView)
+router.register(r'reports_rejection', views.ReportRejectionView)
+router.register(r'reports_complement_demand', views.ReportComplementDemandView)
+router.register(r'announces', views.AnnounceView)
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -51,7 +60,7 @@ urlpatterns = [
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),
     # docs routes
-   	url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-   	url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('account/reset-password/confirm/<uidb64>/<token>/', empty_view, name='password_reset_confirm'),
 ]
