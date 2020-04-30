@@ -9,14 +9,14 @@ from django.contrib.auth.models import Group
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
+        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
+        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_approved','is_active','is_superuser','role','created_on']
         lookup_field = 'uid'
 

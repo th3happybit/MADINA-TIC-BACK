@@ -74,6 +74,17 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
+def wrapperuser(instance, filename):
+    ext = filename.split('.')[-1]
+    # get filename
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join('images/', filename)
+
 # User model based on AbstractUser, the default user.
 class User(AbstractUser):
     uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -87,6 +98,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=200, choices=roles, default='Client')
     date_of_birth = models.DateField(default=datetime.date.today)
     address = models.CharField(max_length=200)
+    image = models.ImageField(upload_to=wrapperuser, blank=True, null=True)
     is_approved = models.BooleanField(
         _('approved'),
         default=False,
