@@ -4,6 +4,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from django.contrib.auth.models import Group
+import os,binascii
 
 
 # User Model serializer
@@ -13,6 +14,26 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','national_id','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        clients = Group.objects.get(name='clients')
+        admins = Group.objects.get(name='admins')
+        maires = Group.objects.get(name='maires')
+        services = Group.objects.get(name='services')
+        if instance.role == 'Client':
+            clients.user_set.add(instance)
+        elif instance.role == 'Admin':
+            admins.user_set.add(instance)
+        elif instance.role == 'Maire':
+            maires.user_set.add(instance)
+        elif instance.role == 'Service':
+            services.user_set.add(instance)
+        password = binascii.hexlify(os.urandom(10)).decode()
+        instance.set_password(password)
+        instance.save()
+        User.email_user(instance, "Madina-Tic Welcome", "Welcome, your account has been created <br>your password: "+password)
+        return instance
 
     def update(self, instance, validated_data):
         is_approved_key = None
