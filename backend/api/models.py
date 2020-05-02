@@ -107,6 +107,7 @@ class User(AbstractUser):
             'Designates whether this user should be treated as approved. '
         ),
     )
+    national_id = models.CharField(max_length=200, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:

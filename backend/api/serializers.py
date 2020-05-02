@@ -10,32 +10,37 @@ from django.contrib.auth.models import Group
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','image','role','is_approved','is_active','is_superuser','created_on']
+        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','national_id','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
 
     def update(self, instance, validated_data):
         is_approved_key = validated_data['is_approved']
         is_active_key = validated_data['is_active']
-        if is_active_key == True:
-            if is_approved_key == True:
-                subject_validate = "Madina-Tic Validation mail"
-                message_validate = "Hello, Madina-Tic Validation"
-                User.email_user(instance, subject_validate, message_validate)
-            else:
-                subject_reject = "Madina-Tic Rejection mail"
-                message_reject = "Good bye, Madina-Tic Rejection"
-                User.email_user(instance, subject_reject, message_reject)
-        else:
+        print(instance.is_approved)
+        print(instance.is_active)
+        if is_approved_key == True and instance.is_approved == False:
+            subject_validate = "Madina-Tic Validation mail"
+            message_validate = "Welcome, Your Registration has been accepted, you can use your account now! <br>Madina-Tic Validation"
+            User.email_user(instance, subject_validate, message_validate)
+        elif is_approved_key == False and instance.is_approved == False:
+            subject_reject = "Madina-Tic Rejection mail"
+            message_reject = "Good bye, Your Registration has been rejected! <br>Madina-Tic Rejection"
+            User.email_user(instance, subject_reject, message_reject)
+        if is_active_key == True and instance.is_active == False:
+            subject_reject = "Madina-Tic Activation mail"
+            message_reject = "Welcome back, Your account has been activated! <br>Madina-Tic Welcome"
+            User.email_user(instance, subject_reject, message_reject)
+        elif is_active_key == False and instance.is_active == True:
             subject_desactivate = "Madina-Tic Desactivation Mail "
-            message_desactivation = "See you soon, Madina-Tic Desactivation"
+            message_desactivation = "Your account has been disabled, Bye! <br>Madina-Tic Deactivation"
             User.email_user(instance, subject_desactivate, message_desactivation)
         return super().update(instance, validated_data)
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','image','role','is_approved','is_active','is_superuser','created_on']
+        fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','national_id','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_approved','is_active','is_superuser','role','created_on']
         lookup_field = 'uid'
 
