@@ -5,6 +5,7 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from django.contrib.auth.models import Group
 
+
 # User Model serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +13,24 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
+
+    def update(self, instance, validated_data):
+        is_approved_key = validated_data['is_approved']
+        is_active_key = validated_data['is_active']
+        if is_active_key == True:
+            if is_approved_key == True:
+                subject_validate = "Madina-Tic Validation mail"
+                message_validate = "Hello, Madina-Tic Validation"
+                User.email_user(instance, subject_validate, message_validate)
+            else:
+                subject_reject = "Madina-Tic Rejection mail"
+                message_reject = "Good bye, Madina-Tic Rejection"
+                User.email_user(instance, subject_reject, message_reject)
+        else:
+            subject_desactivate = "Madina-Tic Desactivation Mail "
+            message_desactivation = "See you soon, Madina-Tic Desactivation"
+            User.email_user(instance, subject_desactivate, message_desactivation)
+        return super().update(instance, validated_data)
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -22,7 +22,7 @@ class UserView(viewsets.ModelViewSet):
 	filterset_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
 	search_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
 	ordering_fields = ['first_name','last_name','email','phone','date_of_birth','address','role','is_approved','is_active','is_superuser','created_on']
-
+	
 # DeclarationType Model View
 class DeclarationTypeView(viewsets.ModelViewSet):
 	queryset = DeclarationType.objects.all()
