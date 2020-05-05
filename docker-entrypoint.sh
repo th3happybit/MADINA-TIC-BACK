@@ -19,6 +19,7 @@ echo "The Database has been updated"
 echo "Superuser..."
 cat /create_superuser.py | ./manage.py shell
 cat /create_groups.py | ./manage.py shell
+# cat /setup_perms.py | ./manage.py shell
 # collect static files
 ./manage.py collectstatic --no-input
 

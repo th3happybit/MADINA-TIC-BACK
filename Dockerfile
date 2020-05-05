@@ -18,6 +18,7 @@ RUN rm requirements.txt
 COPY docker-entrypoint.sh /
 COPY create_superuser.py /
 COPY create_groups.py /
+COPY setup_perms.py /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
