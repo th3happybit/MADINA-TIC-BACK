@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf.urls import url
 from api import views
 from rest_framework import routers
@@ -22,6 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
+from api.views import ConfirmEmailView
 
 def empty_view(request):
     return HttpResponse('')
@@ -59,6 +60,7 @@ urlpatterns = [
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),
+    re_path(r'^registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),
     # docs routes
     url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
