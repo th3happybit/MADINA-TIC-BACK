@@ -148,11 +148,11 @@ MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/api/media/'
 
 # Django Rest Framework Configuration
+# 'rest_framework.authentication.SessionAuthentication'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend'),
     'DEFAULT_AUTHENTICATION_CLASSES':('rest_framework.authentication.TokenAuthentication',
-                                      'rest_framework.authentication.BasicAuthentication',
-                                      'rest_framework.authentication.SessionAuthentication',),
+                                      'rest_framework.authentication.BasicAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5
@@ -205,6 +205,8 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'api.serializers.UserProfileSerializer',
 }
+
+REST_SESSION_LOGIN = False
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
