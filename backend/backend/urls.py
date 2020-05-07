@@ -60,7 +60,7 @@ urlpatterns = [
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),
-    re_path(r'^registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),
+    re_path(r'auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),    
     # docs routes
     url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
