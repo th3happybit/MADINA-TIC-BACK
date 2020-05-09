@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'l7oo_)!&o#0q4rc%)*vx9%31ioit7w&#0c0!2%@%^pf=ntt47j'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -82,10 +80,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
 # Database
-#https://docs.djangoproject.com/en/3.0/ref/settings/
-#databases
+# https://docs.djangoproject.com/en/3.0/ref/settings/
+# databases
 
 # DATABASES = {
 #     'default': {
@@ -122,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -136,7 +132,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -144,16 +139,18 @@ STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # media files
-MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/api/media/'
 
 # Django Rest Framework Configuration
-# 'rest_framework.authentication.SessionAuthentication'
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend'),
-    'DEFAULT_AUTHENTICATION_CLASSES':('rest_framework.authentication.TokenAuthentication',
-                                      'rest_framework.authentication.BasicAuthentication',),
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',],
+    'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5
 }
@@ -170,7 +167,6 @@ CORS_ORIGIN_WHITELIST = (
 
 # User auth model
 AUTH_USER_MODEL = 'api.User'
-
 
 # Email backend settings for Django
 EMAIL_HOST = 'smtp-relay.sendinblue.com'
@@ -206,8 +202,6 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'api.serializers.UserProfileSerializer',
 }
 
-REST_SESSION_LOGIN = False
-
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'basic': {
@@ -217,5 +211,5 @@ SWAGGER_SETTINGS = {
 }
 
 REDOC_SETTINGS = {
-   'LAZY_RENDERING': False,
+    'LAZY_RENDERING': False,
 }
