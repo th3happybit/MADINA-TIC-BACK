@@ -112,7 +112,6 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 # Declaration  type serializer 
 class DeclarationTypeSerializer(serializers.ModelSerializer):
-	pagination_class = None
 	class Meta:
 		model = DeclarationType
 		fields = ['dtid', 'name', 'created_on']

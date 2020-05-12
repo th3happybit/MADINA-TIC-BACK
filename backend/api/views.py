@@ -29,6 +29,7 @@ class UserView(viewsets.ModelViewSet):
 	
 # DeclarationType Model View
 class DeclarationTypeView(viewsets.ModelViewSet):
+	pagination_class = None
 	queryset = DeclarationType.objects.all()
 	serializer_class = DeclarationTypeSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
