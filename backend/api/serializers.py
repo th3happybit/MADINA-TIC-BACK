@@ -121,7 +121,7 @@ class DeclarationTypeSerializer(serializers.ModelSerializer):
 class DeclarationSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Declaration
-		fields = ['did', 'title', 'desc', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+		fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 		lookup_field = ['did']
 
 # Declaration rejection serializer 
