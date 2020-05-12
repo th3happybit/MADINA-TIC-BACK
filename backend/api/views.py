@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
+from rest_framework.parsers import MultiPartParser
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
