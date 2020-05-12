@@ -45,10 +45,10 @@ class DeclarationView(viewsets.ModelViewSet):
 	serializer_class = DeclarationSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
 	lookup_field = 'did'
-	filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	search_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	filter_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	filterset_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	search_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	ordering_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 
 # DeclarationRejection Model View
 class DeclarationRejectionView(viewsets.ModelViewSet):

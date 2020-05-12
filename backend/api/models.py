@@ -140,7 +140,7 @@ class Declaration(models.Model):
     title = models.CharField(max_length=200)
     desc = models.TextField()
     address = models.CharField(max_length=200, blank=True, null=True)
-    geo_cord = models.CharField(max_length=200, blank=True, null=True)
+    geocord = models.CharField(max_length=200, blank=True, null=True)
     citizen = models.ForeignKey(get_user_model(), related_name='declarations',on_delete=models.CASCADE)
     states = [
         ('not_validated', 'not_validated'),
