@@ -47,7 +47,7 @@ class DeclarationView(viewsets.ModelViewSet):
 	lookup_field = 'did'
 	filter_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 	filterset_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	search_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	search_fields = ['title', 'address', 'geocord', 'citizen__uid', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
 	ordering_fields = ['title', 'address', 'geocord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 
 # DeclarationRejection Model View
@@ -58,7 +58,7 @@ class DeclarationRejectionView(viewsets.ModelViewSet):
 	lookup_field = 'drid'
 	filter_fields = ['maire', 'declaration', 'created_on']
 	filterset_fields = ['maire', 'declaration', 'created_on']
-	search_fields = ['maire', 'declaration', 'created_on']
+	search_fields = ['maire__uid', 'declaration__did', 'created_on']
 	ordering_fields = ['maire', 'declaration', 'created_on']
 
 # DeclarationComplementDemand Model View 
@@ -69,7 +69,7 @@ class DeclarationComplementDemandView(viewsets.ModelViewSet):
 	lookup_field = 'dcid'
 	filter_fields = ['maire', 'declaration', 'created_on']
 	filterset_fields = ['maire', 'declaration', 'created_on']
-	search_fields = ['maire', 'declaration', 'created_on']
+	search_fields = ['maire__uid', 'declaration__did', 'created_on']
 	ordering_fields = ['maire', 'declaration', 'created_on']
 
 # Document Model View 
@@ -80,7 +80,7 @@ class DocumentView(viewsets.ModelViewSet):
 	lookup_field = 'dmid'
 	filter_fields = ['filetype', 'declaration', 'created_on']
 	filterset_fields = ['filetype', 'declaration', 'created_on']
-	search_fields = ['filetype', 'declaration', 'created_on']
+	search_fields = ['filetype', 'declaration__did', 'created_on']
 	ordering_fields = ['filetype', 'declaration', 'created_on']
 
 # Report Model View 
@@ -91,7 +91,7 @@ class ReportView(viewsets.ModelViewSet):
 	lookup_field = 'rid'
 	filter_fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
 	filterset_fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
-	search_fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
+	search_fields = ['declaration__did', 'title', 'service__uid', 'status', 'created_on', 'modified_at', 'validated_at']
 	ordering_fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
 
 # ReportRejection Model View 
@@ -102,7 +102,7 @@ class ReportRejectionView(viewsets.ModelViewSet):
 	lookup_field = 'rrid'
 	filter_fields = ['maire', 'report', 'created_on']
 	filterset_fields = ['maire', 'report', 'created_on']
-	search_fields = ['maire', 'report', 'created_on']
+	search_fields = ['maire__uid', 'report__rid', 'created_on']
 	ordering_fields = ['maire', 'report', 'created_on']
 
 # ReportComplementDemand Model View 
@@ -113,7 +113,7 @@ class ReportComplementDemandView(viewsets.ModelViewSet):
 	lookup_field = 'rcid'
 	filter_fields = ['maire', 'report', 'created_on']
 	filterset_fields = ['maire', 'report', 'created_on']
-	search_fields = ['maire', 'report', 'created_on']
+	search_fields = ['maire__uid', 'report__rid', 'created_on']
 	ordering_fields = ['maire', 'report', 'created_on']
 
 # Announce Model View 
