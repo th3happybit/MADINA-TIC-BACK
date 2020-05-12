@@ -97,7 +97,7 @@ class User(AbstractUser):
         ('Service', 'Service'),
     ]
     role = models.CharField(max_length=200, choices=roles, default='Client')
-    date_of_birth = models.DateField(default=datetime.date.today)
+    date_of_birth = models.DateField()
     address = models.CharField(max_length=200)
     image = models.ImageField(upload_to=wrapperuser, blank=True, null=True)
     is_approved = models.BooleanField(
@@ -139,8 +139,8 @@ class Declaration(models.Model):
     did = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     desc = models.TextField()
-    address = models.CharField(max_length=200)
-    geo_cord = models.CharField(max_length=200)
+    address = models.CharField(max_length=200, blank=True, null=True)
+    geo_cord = models.CharField(max_length=200, blank=True, null=True)
     citizen = models.ForeignKey(get_user_model(), related_name='declarations',on_delete=models.CASCADE)
     states = [
         ('not_validated', 'not_validated'),

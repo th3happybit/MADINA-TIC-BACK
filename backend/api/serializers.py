@@ -1,5 +1,5 @@
 from .models import *
-from rest_framework import serializers
+from rest_framework import serializers,validators
 from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
@@ -14,6 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['uid','first_name','last_name','email','phone','date_of_birth','address','national_id','image','role','is_approved','is_active','is_superuser','created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
+        extra_kwargs = {
+            'date_of_birth': {'error_messages': {'invalid': "invalid format"}},
+        }
 
     def create(self, validated_data):
         instance = super().create(validated_data)
