@@ -22,7 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
-from api.views import ConfirmEmailView
+from api.views import ConfirmEmailView,DocumentView
 
 def empty_view(request):
     return HttpResponse('')
@@ -34,7 +34,6 @@ router.register(r'declarations_types', views.DeclarationTypeView)
 router.register(r'declarations', views.DeclarationView)
 router.register(r'declarations_rejection', views.DeclarationRejectionView)
 router.register(r'declarations_complement_demand', views.DeclarationComplementDemandView)
-router.register(r'documents', views.DocumentView)
 router.register(r'reports', views.ReportView)
 router.register(r'reports_rejection', views.ReportRejectionView)
 router.register(r'reports_complement_demand', views.ReportComplementDemandView)
@@ -57,6 +56,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/documents/', DocumentView.as_view(), name='documents'),
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),
