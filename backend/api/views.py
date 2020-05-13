@@ -17,6 +17,7 @@ from rest_framework.permissions import AllowAny
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser,FileUploadParser
+from .pagination import CustomPagination
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
@@ -29,6 +30,7 @@ class UserView(viewsets.ModelViewSet):
 	filterset_fields = ['first_name','last_name','email','phone','date_of_birth','address','national_id','role','is_approved','is_active','is_superuser','created_on']
 	search_fields = ['first_name','last_name','email','phone','date_of_birth','address','national_id','role','is_approved','is_active','is_superuser','created_on']
 	ordering_fields = ['first_name','last_name','email','phone','date_of_birth','address','national_id','role','is_approved','is_active','is_superuser','created_on']
+	pagination_class = CustomPagination
 	
 # DeclarationType Model View
 class DeclarationTypeView(viewsets.ModelViewSet):
