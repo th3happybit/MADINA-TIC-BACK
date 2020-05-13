@@ -140,7 +140,6 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
 
 # Document serializer
 class DocumentSerializer(serializers.ModelSerializer):
-    src = serializers.ListField(child=serializers.FileField(max_length=None, allow_empty_file=False, use_url=True), allow_empty=True, min_length=None, max_length=None)
     class Meta:
         model = Document
         fields = ['dmid', 'filetype', 'src', 'declaration', 'created_on']

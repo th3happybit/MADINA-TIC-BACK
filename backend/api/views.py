@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets,generics
 from .models import *
 from .serializers import *
+from .helpers import *
 #from .models import Declaration as DeclarationModel
 #from .serializers import DeclarationSerializer as DeclarationSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -10,11 +11,12 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser,FileUploadParser
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
@@ -72,16 +74,34 @@ class DeclarationComplementDemandView(viewsets.ModelViewSet):
 	search_fields = ['maire', 'declaration', 'created_on']
 	ordering_fields = ['maire', 'declaration', 'created_on']
 
-# Document Model View 
-class DocumentView(viewsets.ModelViewSet):
-	queryset = Document.objects.all()
-	serializer_class = DocumentSerializer
-	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-	lookup_field = 'dmid'
-	filter_fields = ['filetype', 'declaration', 'created_on']
-	filterset_fields = ['filetype', 'declaration', 'created_on']
-	search_fields = ['filetype', 'declaration', 'created_on']
-	ordering_fields = ['filetype', 'declaration', 'created_on']
+# Document Model View  Support GET and POST requests
+class DocumentView(APIView):
+	parser_class = [MultiPartParser,FileUploadParser]
+
+	def get(self, request):
+		all_documents = Document.objects.all()
+		serializer = DocumentSerializer(all_documents, many=True)
+		return Response(serializer.data)
+
+	def post(self, request, *args, **kwargs):
+		filetype = request.data['filetype']
+		declaration = request.data['declaration']
+		docs = dict((request.data).lists())['src']
+		flag = 1
+		arr = []
+		for doc in docs:
+			modified_data = modify_input_for_multiple_files(filetype, doc, declaration)
+			file_serializer = DocumentSerializer(data=modified_data)
+			if file_serializer.is_valid():
+				file_serializer.save()
+				arr.append(file_serializer.data)
+			else:
+				flag = 0
+
+		if flag == 1:
+			return Response(arr)
+		else:
+			return Response(arr)
 
 # Report Model View 
 class ReportView(viewsets.ModelViewSet):

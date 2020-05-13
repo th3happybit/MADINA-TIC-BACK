@@ -188,7 +188,7 @@ class Document(models.Model):
         ('other', 'other'),
     ]
     filetype = models.CharField(max_length=200, choices=DocumentType ,default='other')
-    src = models.FileField(upload_to=wrapper)
+    src = models.FileField(blank=True)
     declaration = models.ForeignKey(Declaration, related_name='attachments',on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
 
