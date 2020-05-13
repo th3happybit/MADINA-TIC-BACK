@@ -110,6 +110,13 @@ class CustomRegisterSerializer(RegisterSerializer):
 		clients.user_set.add(user)
 		return user
 
+# Document serializer
+class DocumentSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Document
+		fields = ['dmid', 'filetype', 'src', 'declaration', 'created_on']
+		lookup_field = ['dmid']
+
 # Declaration  type serializer 
 class DeclarationTypeSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -119,9 +126,10 @@ class DeclarationTypeSerializer(serializers.ModelSerializer):
 
 # Declaration serializer
 class DeclarationSerializer(serializers.ModelSerializer):
+	attachments = DocumentSerializer(many=True, read_only=True)
 	class Meta:
 		model = Declaration
-		fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+		fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'attachments','created_on', 'modified_at', 'validated_at']
 		lookup_field = ['did']
 
 # Declaration rejection serializer 
@@ -137,13 +145,6 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
 		model = DeclarationComplementDemand
 		fields = ['dcid', 'maire', 'reason', 'declaration', 'created_on']
 		lookup_field = ['dcid']
-
-# Document serializer
-class DocumentSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Document
-		fields = ['dmid', 'filetype', 'src', 'declaration', 'created_on']
-		lookup_field = ['dmid']
 
 # Report serializer 
 class ReportSerializer(serializers.ModelSerializer):
