@@ -21,7 +21,6 @@ from .pagination import CustomPagination
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
-	permission_classes = [IsAdminUser]
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
