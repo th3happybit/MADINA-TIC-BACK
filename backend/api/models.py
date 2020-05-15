@@ -97,7 +97,7 @@ class User(AbstractUser):
 		('Service', 'Service'),
 	]
 	role = models.CharField(max_length=200, choices=roles, default='Client')
-	date_of_birth = models.DateField(default=timezone.now)
+	date_of_birth = models.DateField(default=datetime.date.today)
 	address = models.CharField(max_length=200)
 	image = models.ImageField(upload_to=wrapperuser, blank=True, null=True)
 	is_approved = models.BooleanField(
