@@ -139,12 +139,24 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
 		fields = ['drid', 'maire', 'reason', 'declaration', 'created_on']
 		lookup_field = ['drid']
 
+	def create(self, validated_data):
+		instance = super().create(validated_data)
+		instance.declaration.status = 'refused'
+		instance.declaration.save()
+		return instance
+
 # Declaration complement demand serializer 
 class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = DeclarationComplementDemand
 		fields = ['dcid', 'maire', 'reason', 'declaration', 'created_on']
 		lookup_field = ['dcid']
+
+	def create(self, validated_data):
+		instance = super().create(validated_data)
+		instance.declaration.status = 'lack_of_info'
+		instance.declaration.save()
+		return instance
 
 # Report serializer 
 class ReportSerializer(serializers.ModelSerializer):
@@ -160,12 +172,24 @@ class ReportRejectionSerializer(serializers.ModelSerializer):
 		fields = ['rrid', 'maire', 'reason', 'report', 'created_on']
 		lookup_field = ['rrid']
 
+	def create(self, validated_data):
+		instance = super().create(validated_data)
+		instance.report.status = 'refused'
+		instance.report.save()
+		return instance	
+
 # Report complement demand 
 class ReportComplementDemandSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ReportComplementDemand
 		fields = ['rcid', 'maire', 'report', 'reason', 'created_on']
 		lookup_field = ['rcid']
+
+	def create(self, validated_data):
+		instance = super().create(validated_data)
+		instance.report.status = 'lack_of_info'
+		instance.report.save()
+		return instance
 
 
 # Announce serializer
