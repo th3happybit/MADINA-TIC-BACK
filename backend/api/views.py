@@ -18,6 +18,8 @@ from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser,FileUploadParser
 from .pagination import CustomPagination
+from django_filters import rest_framework as filters
+import django_filters
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
@@ -43,11 +45,31 @@ class DeclarationTypeView(viewsets.ModelViewSet):
 	search_fields = ['name']
 	ordering_fields = ['name']
 
+# choice filter for declaration
+states = [
+	('draft', 'draft'),
+	('not_validated', 'not_validated'),
+	('lack_of_info', 'lack_of_info'),
+	('validated', 'validated'),
+	('refused', 'refused'),
+	('under_treatment', 'under_treatment'),
+	('treated', 'treated'),
+	('archived', 'archived'),
+]
+
+class DeclarationFilter(filters.FilterSet):
+	status = django_filters.MultipleChoiceFilter(choices=states)
+
+	class Meta:
+		model = Declaration
+		fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+
 # Declaration Model View 
 class DeclarationView(viewsets.ModelViewSet):
 	queryset = Declaration.objects.all()
 	serializer_class = DeclarationSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+	filterset_class = DeclarationFilter
 	lookup_field = 'did'
 	filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 	filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
@@ -105,11 +127,29 @@ class DocumentView(APIView):
 		else:
 			return Response(arr)
 
+# choice filter for declaration
+states_report = [
+	('not_validated', 'not_validated'),
+	('lack_of_info', 'lack_of_info'),
+	('work_not_finished', 'work_not_finished'),
+	('validated', 'validated'),
+	('refused', 'refused'),
+	('archived', 'archived'),
+]
+
+class ReportFilter(filters.FilterSet):
+	status = django_filters.MultipleChoiceFilter(choices=states_report)
+
+	class Meta:
+		model = Report
+		fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
+
 # Report Model View 
 class ReportView(viewsets.ModelViewSet):
 	queryset = Report.objects.all()
 	serializer_class = ReportSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+	filterset_class = ReportFilter
 	lookup_field = 'rid'
 	filter_fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
 	filterset_fields = ['declaration', 'title', 'service', 'status', 'created_on', 'modified_at', 'validated_at']
