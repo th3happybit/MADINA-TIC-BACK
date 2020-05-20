@@ -141,7 +141,8 @@ class Declaration(models.Model):
 	desc = models.TextField()
 	address = models.CharField(max_length=200, blank=True, null=True)
 	geo_cord = models.CharField(max_length=200, blank=True, null=True)
-	citizen = models.ForeignKey(get_user_model(), related_name='declarations',on_delete=models.CASCADE)
+	citizen = models.ForeignKey(get_user_model(), related_name='citizen.declarations+',on_delete=models.CASCADE)
+	service = models.ForeignKey(get_user_model(), related_name='service.declarations+',on_delete=models.CASCADE, blank=True, null=True)
 	states = [
 		('draft', 'draft'),
 		('not_validated', 'not_validated'),
