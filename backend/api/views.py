@@ -62,7 +62,7 @@ class DeclarationFilter(filters.FilterSet):
 
 	class Meta:
 		model = Declaration
-		fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+		fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 
 # Declaration Model View 
 class DeclarationView(viewsets.ModelViewSet):
@@ -71,10 +71,10 @@ class DeclarationView(viewsets.ModelViewSet):
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
 	filterset_class = DeclarationFilter
 	lookup_field = 'did'
-	filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
-	ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
+	search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'service__uid', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
+	ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 
 # DeclarationRejection Model View
 class DeclarationRejectionView(viewsets.ModelViewSet):
