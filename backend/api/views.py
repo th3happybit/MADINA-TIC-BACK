@@ -73,7 +73,7 @@ class DeclarationView(viewsets.ModelViewSet):
 	lookup_field = 'did'
 	filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 	filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
-	search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'service__uid', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
+	search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name', 'service__uid', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
 	ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'created_on', 'modified_at', 'validated_at']
 
 # DeclarationRejection Model View
