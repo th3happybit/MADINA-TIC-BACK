@@ -129,7 +129,7 @@ class DeclarationSerializer(serializers.ModelSerializer):
 	attachments = DocumentSerializer(many=True, read_only=True)
 	class Meta:
 		model = Declaration
-		fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'service', 'status', 'dtype', 'attachments','created_on', 'modified_at', 'validated_at']
+		fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'attachments','created_on', 'modified_at', 'validated_at']
 		lookup_field = ['did']
 
 # Declaration rejection serializer 
