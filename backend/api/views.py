@@ -110,11 +110,12 @@ class DocumentView(APIView):
 	def post(self, request, *args, **kwargs):
 		filetype = request.data['filetype']
 		declaration = request.data['declaration']
+		report = request.data['report']
 		docs = dict((request.data).lists())['src']
 		flag = 1
 		arr = []
 		for doc in docs:
-			modified_data = modify_input_for_multiple_files(filetype, doc, declaration)
+			modified_data = modify_input_for_multiple_files(filetype, doc, declaration, report)
 			file_serializer = DocumentSerializer(data=modified_data)
 			if file_serializer.is_valid():
 				file_serializer.save()
