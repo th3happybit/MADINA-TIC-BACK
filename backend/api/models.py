@@ -189,21 +189,6 @@ class DeclarationComplementDemand(models.Model):
 	def __str__(self):
 		return str(self.dcid) + " - " + self.reason + " - " + str(self.created_on)
 
-class Document(models.Model):
-	dmid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-	DocumentType = [
-		('pdf', 'pdf'),
-		('image', 'image'),
-		('other', 'other'),
-	]
-	filetype = models.CharField(max_length=200, choices=DocumentType ,default='other')
-	src = models.FileField(blank=True)
-	declaration = models.ForeignKey(Declaration, related_name='attachments',on_delete=models.CASCADE)
-	created_on = models.DateTimeField(auto_now_add=True)
-
-	def __str__(self):
-		return str(self.dmid) + " - " + self.filetype + " - " + str(self.created_on)
-
 class Report(models.Model):
 	rid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	declaration = models.OneToOneField(Declaration, related_name='report', on_delete=models.CASCADE)
@@ -225,6 +210,22 @@ class Report(models.Model):
 
 	def __str__(self):
 		return str(self.rid) + " - " + self.title + " - " + str(self.created_on)
+
+class Document(models.Model):
+	dmid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+	DocumentType = [
+		('pdf', 'pdf'),
+		('image', 'image'),
+		('other', 'other'),
+	]
+	filetype = models.CharField(max_length=200, choices=DocumentType ,default='other')
+	src = models.FileField(blank=True)
+	declaration = models.ForeignKey(Declaration, related_name='attachments',on_delete=models.CASCADE, blank= True, null= True)
+	report = models.ForeignKey(Report, related_name='report.attachments+',on_delete=models.CASCADE, blank=True, null=True)
+	created_on = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return str(self.dmid) + " - " + self.filetype + " - " + str(self.created_on)
 
 class ReportRejection(models.Model):
 	rrid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

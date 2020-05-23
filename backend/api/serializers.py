@@ -114,7 +114,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Document
-		fields = ['dmid', 'filetype', 'src', 'declaration', 'created_on']
+		fields = ['dmid', 'filetype', 'src', 'declaration', 'report', 'created_on']
 		lookup_field = ['dmid']
 
 # Declaration  type serializer 
