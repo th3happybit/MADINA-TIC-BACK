@@ -153,6 +153,13 @@ class Declaration(models.Model):
 		('treated', 'treated'),
 		('archived', 'archived'),
 	]
+	levels = [
+		('critical', 'critical'),
+		('important', 'important'),
+		('normal', 'normal'),
+		('low', 'low'),
+	]
+	priority = models.CharField(max_length=200, choices=levels, default='normal')
 	status = models.CharField(max_length=200, choices=states, default='not_validated')
 	dtype = models.ForeignKey(DeclarationType, related_name='declarations',on_delete=models.CASCADE)
 	created_on = models.DateTimeField(auto_now_add=True)
