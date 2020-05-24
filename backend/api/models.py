@@ -154,10 +154,10 @@ class Declaration(models.Model):
 		('archived', 'archived'),
 	]
 	levels = [
-		('critical', 'critical'),
-		('important', 'important'),
-		('normal', 'normal'),
-		('low', 'low'),
+		(1, 'critical'),
+		(2, 'important'),
+		(3, 'normal'),
+		(4, 'low'),
 	]
 	priority = models.CharField(max_length=200, choices=levels, default='normal')
 	status = models.CharField(max_length=200, choices=states, default='not_validated')
