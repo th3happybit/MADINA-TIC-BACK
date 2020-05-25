@@ -198,3 +198,10 @@ class AnnounceSerializer(serializers.ModelSerializer):
 		model = Announce
 		fields = ['aid', 'title', 'desc', 'status', 'created_on', 'start_at', 'end_at']
 		lookup_field = ['aid']
+
+# Announce Complement Demand Serializer
+class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = AnnounceComplementDemand
+		fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
+		lookup_field = ['acid']

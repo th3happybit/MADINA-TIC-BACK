@@ -38,6 +38,7 @@ router.register(r'reports', views.ReportView)
 router.register(r'reports_rejection', views.ReportRejectionView)
 router.register(r'reports_complement_demand', views.ReportComplementDemandView)
 router.register(r'announces', views.AnnounceView)
+router.register(r'announces_complement_demand', views.AnnounceComplementDemandView)
 
 schema_view = get_schema_view(
    openapi.Info(
