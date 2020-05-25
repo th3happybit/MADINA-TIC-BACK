@@ -232,3 +232,14 @@ class ConfirmEmailView(APIView):
 		self.object = confirmation = self.get_object()
 		confirmation.confirm(self.request)
 		return HttpResponseRedirect('http://13.92.195.8/login')   ## login page redirection
+
+# Announce Complement Demand View
+class AnnounceComplementDemandView(viewsets.ModelViewSet):
+	queryset = AnnounceComplementDemand.objects.all()
+	serializer_class = AnnounceComplementDemandSerializer
+	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+	filter_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
+	filterset_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
+	search_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
+	ordering_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
+

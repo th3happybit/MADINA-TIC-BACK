@@ -264,3 +264,14 @@ class Announce(models.Model):
 
 	def __str__(self):
 		return str(self.aid) + " - " + self.title + " - " + str(self.created_on)
+
+# Announce Complement Demand Model
+class AnnounceComplementDemand(models.Model):
+	acid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+	maire = models.ForeignKey(get_user_model(), related_name='announces_complement_demands',on_delete=models.CASCADE)
+	announce = models.ForeignKey(Announce, related_name='complement_demands', on_delete=models.CASCADE)
+	reason = models.CharField(max_length=200)
+	created_on = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return str(self.acid) + " - " + self.reason + " - " + str(self.created_on)
