@@ -4,7 +4,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from django.contrib.auth.models import Group
-import os,binascii
+import os,binascii,datetime,pytz
 
 
 # User Model serializer
@@ -192,6 +192,7 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
 		return instance
 
 
+utc=pytz.UTC
 # Announce serializer
 class AnnounceSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -199,6 +200,18 @@ class AnnounceSerializer(serializers.ModelSerializer):
 		fields = ['aid', 'title', 'desc', 'service', 'status', 'created_on', 'start_at', 'end_at']
 		lookup_field = ['aid']
 
+
+	def validate(self, validated_data):
+		current_date = utc.localize(datetime.datetime.now()) # for comparaison we use same date format  
+
+		if validated_data['start_at'] > validated_data['end_at']:
+			raise serializers.ValidationError("The end date (time) must occur after the start date (time)")
+		elif current_date > validated_data['start_at']:
+			raise serializers.ValidationError("The start date (time) must occur after the current date date (time)")
+		elif current_date > validated_data['end_at']:
+			raise serializers.ValidationError("The end date (time) must occur after the current date (time)")
+		
+		return validated_data
 # Announce Complement Demand Serializer
 class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
 	class Meta:
