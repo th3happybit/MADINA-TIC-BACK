@@ -196,7 +196,7 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
 class AnnounceSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Announce
-		fields = ['aid', 'title', 'desc', 'status', 'created_on', 'start_at', 'end_at']
+		fields = ['aid', 'title', 'desc', 'service', 'status', 'created_on', 'start_at', 'end_at']
 		lookup_field = ['aid']
 
 # Announce Complement Demand Serializer

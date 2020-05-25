@@ -202,10 +202,10 @@ class AnnounceView(viewsets.ModelViewSet):
 	queryset = Announce.objects.all()
 	serializer_class = AnnounceSerializer
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-	filter_fields = ['title', 'status', 'created_on', 'start_at', 'end_at']
-	filterset_fields = ['title', 'status', 'created_on', 'start_at', 'end_at']
-	search_fields = ['title', 'status', 'created_on', 'start_at', 'end_at']
-	ordering_fields = ['title', 'status', 'created_on', 'start_at', 'end_at']
+	filter_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
+	filterset_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
+	search_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
+	ordering_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
 
 ## Confirmation email view 
 class ConfirmEmailView(APIView):
