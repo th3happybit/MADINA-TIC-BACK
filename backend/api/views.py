@@ -101,10 +101,28 @@ class DeclarationComplementDemandView(viewsets.ModelViewSet):
 # Document Model View  Support GET and POST requests
 class DocumentView(APIView):
 	parser_class = [MultiPartParser,FileUploadParser]
+	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+	lookup_field = 'dmid'
+	filter_fields = ['dmid', 'filetype', 'declaration', 'report__rid', 'created_on']
+	filterset_fields = ['dmid', 'filetype', 'declaration', 'report__rid', 'created_on']
+	search_fields = ['dmid', 'filetype', 'declaration', 'report__rid',  'created_on']
+	ordering_fields = ['dmid', 'filetype', 'declaration', 'report__rid', 'created_on']
+	
+	""" filter the queryset with whichever filter backend is in use """
+	def filter_queryset(self, queryset):  
+		for backend in list(self.filter_backends):
+			queryset = backend().filter_queryset(self.request, queryset, self)
+
+		return queryset
+
+	"""get all instances"""
+	def get_queryset(self):
+
+		return Document.objects.all()
 
 	def get(self, request):
-		all_documents = Document.objects.all()
-		serializer = DocumentSerializer(all_documents, many=True)
+		the_filtered_qs = self.filter_queryset(self.get_queryset())
+		serializer = DocumentSerializer(the_filtered_qs, many=True)
 		return Response(serializer.data)
 
 	def post(self, request, *args, **kwargs):
