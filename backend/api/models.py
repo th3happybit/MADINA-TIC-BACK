@@ -252,6 +252,7 @@ class Announce(models.Model):
 	aid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	title = models.CharField(max_length=200)
 	desc = models.TextField()
+	service = models.ForeignKey(get_user_model(), related_name='announces',on_delete=models.CASCADE, blank=True, null=True)
 	states = [
 		('draft', 'draft'),
 		('not_validated', 'not_validated'),
