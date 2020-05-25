@@ -196,6 +196,7 @@ class Report(models.Model):
 	desc = models.TextField()
 	service = models.ForeignKey(get_user_model(), related_name='reports',on_delete=models.CASCADE)
 	states = [
+		('draft', 'draft'),
 		('not_validated', 'not_validated'),
 		('lack_of_info', 'lack_of_info'),
 		('work_not_finished', 'work_not_finished'),
@@ -252,6 +253,8 @@ class Announce(models.Model):
 	title = models.CharField(max_length=200)
 	desc = models.TextField()
 	states = [
+		('draft', 'draft'),
+		('not_validated', 'not_validated'),
 		('published', 'published'),
 		('modified', 'modified'),
 		('removed', 'removed'),
