@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets,generics
+from rest_framework import viewsets,generics,status
 from .models import *
 from .serializers import *
 from .helpers import *
@@ -20,6 +20,7 @@ from rest_framework.parsers import MultiPartParser,FileUploadParser
 from .pagination import CustomPagination
 from django_filters import rest_framework as filters
 import django_filters
+from django.http import Http404
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
@@ -145,6 +146,54 @@ class DocumentView(APIView):
 			return Response(arr)
 		else:
 			return Response(arr)
+
+# Document details for upadte/delete/retrieve document
+class DocumentDetailView(APIView):
+	parser_class = [MultiPartParser,FileUploadParser]
+	filter_backends = []
+
+	def get_object(self, pk):
+		try:
+			return Document.objects.get(pk=pk)
+		except Document.DoesNotExist:
+			raise Http404
+
+	# get instance
+	def get(self, request, pk, format=None):
+		document = self.get_object(pk)
+		serializer = DocumentSerializer(document)
+		return Response(serializer.data)
+
+	# update instance
+	def put(self, request, pk, format=None):
+		filetype = request.data['filetype']
+		declaration = request.data['declaration']
+		report = request.data['report']
+		docs = dict((request.data).lists())['src']
+		flag = 1
+		arr = []
+		#document = self.get_object(pk)
+		for doc in docs:
+			modified_data = modify_input_for_multiple_files(filetype, doc, declaration, report)
+			file_serializer = DocumentSerializer(data=modified_data)
+			if file_serializer.is_valid():
+				file_serializer.save()
+				arr.append(file_serializer.data)
+			else:
+				flag = 0
+
+		if flag == 1:
+			return Response(arr, status=status.HTTP_200_OK)
+		else:
+			return Response(arr)
+
+	# delete instance 
+	def delete(self, request, pk, format=None):
+		message = {'success': 'document deleted successfully'}
+		document = self.get_object(pk)
+		document.delete()
+		return Response(message, status=status.HTTP_200_OK)
+
 
 # choice filter for declaration
 states_report = [
