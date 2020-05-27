@@ -256,6 +256,7 @@ class Announce(models.Model):
 	states = [
 		('draft', 'draft'),
 		('not_validated', 'not_validated'),
+		('lack_of_info', 'lack_of_info'),
 		('published', 'published'),
 		('modified', 'modified'),
 		('removed', 'removed'),
