@@ -253,7 +253,7 @@ class AnnounceView(viewsets.ModelViewSet):
 	filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
 	filter_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
 	filterset_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
-	search_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
+	search_fields = ['title', 'status', 'service__uid', 'created_on', 'start_at', 'end_at']
 	ordering_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
 
 ## Confirmation email view 
