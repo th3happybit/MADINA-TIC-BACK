@@ -262,13 +262,24 @@ class ReportComplementDemandView(viewsets.ModelViewSet):
     ordering_fields = ['maire', 'report', 'created_on']
 
 
+class AnnounceFilter(filters.FilterSet):
+    start_at_greater = django_filters.DateTimeFilter(field_name='start_at', lookup_expr='gte')
+    start_at_less = django_filters.DateTimeFilter(field_name='start_at', lookup_expr='lte')
+    end_at_greater = django_filters.DateTimeFilter(field_name='end_at', lookup_expr="gte")
+    end_at_less = django_filters.DateTimeFilter(field_name='end_at', lookup_expr="lte")
+
+    class Meta:
+        model = Announce
+        fields = ['title', 'status', 'service', 'created_on', 'start_at_greater', 'start_at_less',
+                  'end_at_greater', 'end_at_less']
+
+
 # Announce Model View
 class AnnounceView(viewsets.ModelViewSet):
     queryset = Announce.objects.all()
     serializer_class = AnnounceSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filter_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
-    filterset_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
+    filterset_class = AnnounceFilter
     search_fields = ['title', 'status', 'service__uid', 'created_on', 'start_at', 'end_at']
     ordering_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
 
@@ -278,8 +289,8 @@ class AnnounceNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Announce.objects.all()
     serializer_class = AnnounceNestedSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = AnnounceFilter
     filter_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
-    filterset_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
     search_fields = ['title', 'status', 'service__uid', 'created_on', 'start_at', 'end_at']
     ordering_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
 
