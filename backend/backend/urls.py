@@ -22,10 +22,12 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
-from api.views import ConfirmEmailView,DocumentView,DocumentDetailView
+from api.views import ConfirmEmailView, DocumentView, DocumentDetailView
+
 
 def empty_view(request):
     return HttpResponse('')
+
 
 # admin rest api routes
 router = routers.DefaultRouter()
@@ -39,19 +41,20 @@ router.register(r'reports_rejection', views.ReportRejectionView)
 router.register(r'reports_complement_demand', views.ReportComplementDemandView)
 router.register(r'announces', views.AnnounceView)
 router.register(r'announces_complement_demand', views.AnnounceComplementDemandView)
+router.register(r'announce_nested', views.AnnounceNestedView)
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Madina-tic API",
-      default_version='v1',
-      description="""
+    openapi.Info(
+        title="Madina-tic API",
+        default_version='v1',
+        description="""
       Madina-tic Project api docs.
       """,
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@madina-tic.dz"),
-   ),
-   public=True,
-   permission_classes=(permissions.IsAuthenticatedOrReadOnly,),
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@madina-tic.dz"),
+    ),
+    public=True,
+    permission_classes=(permissions.IsAuthenticatedOrReadOnly,),
 )
 
 urlpatterns = [
@@ -62,7 +65,8 @@ urlpatterns = [
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),
-    re_path(r'auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),    
+    re_path(r'auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$', ConfirmEmailView.as_view(),
+            name='account_confirm_email'),
     # docs routes
     url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
