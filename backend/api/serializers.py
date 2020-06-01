@@ -158,6 +158,18 @@ class DeclarationSerializer(serializers.ModelSerializer):
         lookup_field = ['did']
 
 
+# Declaration serializer
+class DeclarationNestedSerializer(serializers.ModelSerializer):
+    attachments = DocumentSerializer(many=True, read_only=True)
+    citizen = ServiceSerializer(read_only=True)
+
+    class Meta:
+        model = Declaration
+        fields = ['did', 'title', 'desc', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+                  'attachments', 'created_on', 'modified_at', 'validated_at']
+        lookup_field = ['did']
+
+
 # Declaration rejection serializer
 class DeclarationRejectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -246,7 +258,7 @@ class AnnounceSerializer(serializers.ModelSerializer):
         return validated_data
 
 
-# Announce serializer
+# Announce Nested serializer
 class AnnounceNestedSerializer(serializers.ModelSerializer):
     service = ServiceSerializer(read_only=True)
 

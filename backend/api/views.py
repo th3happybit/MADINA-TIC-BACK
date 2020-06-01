@@ -83,6 +83,23 @@ class DeclarationView(viewsets.ModelViewSet):
                        'created_on', 'modified_at', 'validated_at']
 
 
+# Declaration Model View
+class DeclarationNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Declaration.objects.all()
+    serializer_class = DeclarationNestedSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = DeclarationFilter
+    lookup_field = 'did'
+    filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+                     'modified_at', 'validated_at']
+    filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+                        'created_on', 'modified_at', 'validated_at']
+    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+                     'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
+    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+                       'created_on', 'modified_at', 'validated_at']
+
+
 # DeclarationRejection Model View
 class DeclarationRejectionView(viewsets.ModelViewSet):
     queryset = DeclarationRejection.objects.all()
