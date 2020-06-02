@@ -1,4 +1,6 @@
 from rest_framework import viewsets, generics, status, mixins
+
+from .helpers import modify_input_for_multiple_files
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
