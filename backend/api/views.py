@@ -158,7 +158,7 @@ class DocumentView(APIView):
     def post(self, request, *args, **kwargs):
         filetype = request.data['filetype']
         declaration = request.data['declaration']
-        report = request.data['report']
+        report = request.data.get('report')
         docs = dict((request.data).lists())['src']
         flag = 1
         arr = []
