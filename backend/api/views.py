@@ -350,3 +350,55 @@ class AnnounceComplementDemandView(viewsets.ModelViewSet):
     filterset_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
     search_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
     ordering_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
+
+
+class StatisticsView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        ''' Users Statistics '''
+        all_users_count = User.objects.all().count() # all current users
+        active_users_count = User.objects.filter(is_active=True).exclude(role='Admin').count() #  active users exclude Admins
+        all_citoyens_count = User.objects.filter(role='Client').count() # citoyens 
+        citoyens_approved_count = User.objects.filter(role='Client').filter(is_approved=True).count() # citoyen approved
+        citoyens_non_approved_count = User.objects.filter(role='Client').filter(is_approved=False).count() # citoyen non approved
+        current_services_count = User.objects.filter(role='Service').count() # services
+        ''' Declaration Statistics '''
+        all_declarations_count = Declaration.objects.all().count() # declarations
+        validated_declarations_count = Declaration.objects.filter(status='validated').count() # validated declarations
+        refused_declarations_count = Declaration.objects.filter(status='refused').count() # refused declarations
+        treated_declarations_count = Declaration.objects.filter(status= 'treated').count() # treated declarations
+        under_treatment_declarations_count = Declaration.objects.filter(status= 'under_treatment').count() # under treatment
+        critical_priority_dec = Declaration.objects.filter(priority=1).count() # critical priority
+        important_priority_dec = Declaration.objects.filter(priority=2).count() # important
+        normal_priority_dec = Declaration.objects.filter(priority=3).count() # normal
+        low_priority_dec = Declaration.objects.filter(priority=4).count() # low
+        ''' Announce Statistics '''
+        all_announces_count = Announce.objects.all().count()
+        published_announces_count = Announce.objects.filter(status='published').count()
+        removed_announces_count = Announce.objects.filter(status='removed').count()
+
+        data = {
+            'all_users': all_users_count,
+            'active_users': active_users_count,
+            'citoyens': all_citoyens_count, 
+            'citoyens_approved': citoyens_approved_count,
+            'citoyens_non_approved': citoyens_non_approved_count,
+            'current_services':  current_services_count,
+            'declarations': all_declarations_count,
+            'validated_declarations': validated_declarations_count,
+            'refused_declarations': refused_declarations_count,
+            'treated_declarations': treated_declarations_count,
+            'under_treatment_declarations': under_treatment_declarations_count,
+            'critical_priority': critical_priority_dec,
+            'important_priority': important_priority_dec,
+            'normal_priority': normal_priority_dec,
+            'low_priority': low_priority_dec,
+            'all_announces': all_announces_count,
+            'published_announces': published_announces_count,
+            'removed_announces': removed_announces_count
+            }
+
+        return Response(data)
+
