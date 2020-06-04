@@ -250,8 +250,8 @@ class AnnounceSerializer(serializers.ModelSerializer):
 
         if validated_data['start_at'] > validated_data['end_at']:
             raise serializers.ValidationError("The end date (time) must occur after the start date (time)")
-        elif current_date > validated_data['start_at']:
-            raise serializers.ValidationError("The start date (time) must occur after the current date date (time)")
+        # elif current_date > validated_data['start_at']:
+        #     raise serializers.ValidationError("The start date (time) must occur after the current date date (time)")
         elif current_date > validated_data['end_at']:
             raise serializers.ValidationError("The end date (time) must occur after the current date (time)")
 
