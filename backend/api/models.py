@@ -145,13 +145,6 @@ class Declaration(models.Model):
     did = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     desc = models.TextField()
-    is_root = models.BooleanField(
-        _('root'),
-        default=False,
-        help_text=_(
-            'Designates whether this declaration should be treated as parent. '
-        ),       
-        )
     parent_declaration = models.ForeignKey('self', default=None, null=True, related_name='declaration.parent_declaration+', on_delete=models.CASCADE)
     address = models.CharField(max_length=200, blank=True, null=True)
     geo_cord = models.CharField(max_length=200, blank=True, null=True)
