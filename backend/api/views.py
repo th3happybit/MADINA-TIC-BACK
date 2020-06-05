@@ -75,9 +75,9 @@ class DeclarationView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
-    filter_fields = ['title', 'is_root', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+    filter_fields = ['title',  'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
                      'modified_at', 'validated_at']
-    filterset_fields = ['title', 'is_root', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
     search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
@@ -92,9 +92,9 @@ class DeclarationNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
-    filter_fields = ['title', 'is_root', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+    filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
                      'modified_at', 'validated_at']
-    filterset_fields = ['title', 'is_root', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
     search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
