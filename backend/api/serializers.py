@@ -236,7 +236,6 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
 
 utc = pytz.UTC
 
-
 # Announce serializer
 class AnnounceSerializer(serializers.ModelSerializer):
     class Meta:
