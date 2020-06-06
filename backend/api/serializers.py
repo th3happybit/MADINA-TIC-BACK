@@ -175,11 +175,52 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         model = DeclarationRejection
         fields = ['drid', 'maire', 'reason', 'declaration', 'created_on']
         lookup_field = ['drid']
+    
+        ''' UNDER TESTS (don't judge this) '''
+    def push_notify(citoyen_id, maire_id, reason):
+        
+        from pusher_push_notifications import PushNotifications
+        
+        maire = User.objects.get(uid=maire_id)
 
+        push_client = PushNotifications(
+            instance_id='65b0754a-0713-4b71-bc41-4d2abae63fc6',
+            secret_key='E1067A08CDB1C1F6DD92AF5CAFF4CA9C8F5B50740B6865B3CFACFC282A202A10',
+            )
+
+        response = push_client.publish_to_users(
+            user_ids = [str(citoyen_id), str(maire_id)],
+            publish_body={
+                        'apns': {
+                            'aps': {
+                             'alert': 'Declaration rejected',
+                                   },
+                                },
+                        'fcm': {
+                         'notification': {
+                             'title': 'Declaration rejected',
+                             'body': 'Declaration rejcted by' + maire.first_name,
+                                         },
+                                },
+                       'web': {
+                         'notification': {
+                             'title': 'Declaration rejected',
+                             'body': 'Declaration rejcted by' + maire.first_name,
+                                         },
+                            },
+                        },
+            )
+        print(response['publishId'])
+        ''' UNDER TESTS (don't judge this)'''
     def create(self, validated_data):
+        declaration = validated_data['declaration']
+        reason = validated_data['reason']
+        citoyen = declaration.citizen
+        maire = validated_data['maire']
         instance = super().create(validated_data)
         instance.declaration.status = 'refused'
         instance.declaration.save()
+        DeclarationRejectionSerializer.push_notify(citoyen.uid, maire.uid, reason)
         return instance
 
 

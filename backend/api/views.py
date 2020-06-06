@@ -64,7 +64,7 @@ class DeclarationFilter(filters.FilterSet):
 
     class Meta:
         model = Declaration
-        fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+        fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
                   'modified_at', 'validated_at']
 
 
@@ -75,13 +75,13 @@ class DeclarationView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
-    filter_fields = ['title',  'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+    filter_fields = ['title',  'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
                      'modified_at', 'validated_at']
-    filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    filterset_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
-    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
-    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    ordering_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                        'created_on', 'modified_at', 'validated_at']
 
 
