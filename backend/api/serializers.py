@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['uid', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id',
-                  'image', 'role', 'is_approved', 'is_active', 'is_superuser', 'created_on']
+                  'image', 'is_french', 'role', 'is_approved', 'is_active', 'is_superuser', 'created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
         extra_kwargs = {
@@ -281,7 +281,7 @@ utc = pytz.UTC
 class AnnounceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announce
-        fields = ['aid', 'title', 'desc', 'service', 'status', 'created_on', 'start_at', 'end_at']
+        fields = ['aid', 'title', 'desc', 'service', 'image', 'status', 'created_on', 'start_at', 'end_at']
         lookup_field = ['aid']
 
     def validate(self, validated_data):
@@ -303,7 +303,7 @@ class AnnounceNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Announce
-        fields = ['aid', 'title', 'desc', 'service', 'status', 'created_on', 'start_at', 'end_at']
+        fields = ['aid', 'title', 'desc', 'service', 'image', 'status', 'created_on', 'start_at', 'end_at']
         lookup_field = ['aid']
 
     def validate(self, validated_data):

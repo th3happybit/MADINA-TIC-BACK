@@ -22,13 +22,13 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     lookup_field = 'uid'
-    filter_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    filter_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'is_french','role',
                      'is_approved', 'is_active', 'is_superuser', 'created_on']
-    filterset_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    filterset_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
                         'is_approved', 'is_active', 'is_superuser', 'created_on']
-    search_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    search_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
                      'is_approved', 'is_active', 'is_superuser', 'created_on']
-    ordering_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    ordering_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
                        'is_approved', 'is_active', 'is_superuser', 'created_on']
     pagination_class = CustomPagination
 
