@@ -1,12 +1,11 @@
 from rest_framework import viewsets, generics, status, mixins
-
 from .helpers import modify_input_for_multiple_files
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser, FileUploadParser
@@ -14,6 +13,7 @@ from .pagination import CustomPagination
 from django_filters import rest_framework as filters
 import django_filters
 from django.http import Http404
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 
 
 # User Model View for admin access only
@@ -425,3 +425,25 @@ class AnnounceStatisticsView(APIView):
         }
 
         return Response(data)
+
+
+# Pusher Beams AUTH
+class BeamsAuthView(APIView):
+    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        from pusher_push_notifications import PushNotifications
+        push_client = PushNotifications(
+            instance_id='65b0754a-0713-4b71-bc41-4d2abae63fc6',
+            secret_key='E1067A08CDB1C1F6DD92AF5CAFF4CA9C8F5B50740B6865B3CFACFC282A202A10',
+            )
+        user_id = str(request.user.uid)
+        beams_token = push_client.generate_token(user_id)      
+        # content = {
+        #     'user': request.user.first_name,
+        #     'user_id': request.user.uid,
+        #     'beams_token': beams_token,
+        #     'auth': request.auth,
+        # }
+        return Response(beams_token)
