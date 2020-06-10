@@ -102,7 +102,14 @@ class User(AbstractUser):
     role = models.CharField(max_length=200, choices=roles, default='Client')
     date_of_birth = models.DateField(default=datetime.date.today)
     address = models.CharField(max_length=200)
-    image = models.ImageField(upload_to=wrapperuser, blank=True, null=True)
+    image = models.ImageField(upload_to=wrapperuser, blank=True, null=True) 
+    is_french = models.BooleanField(
+        _('french'),
+        default=True,
+        help_text=_(
+            'Designates whether this user use french or arabe.'
+        ),
+    )
     is_approved = models.BooleanField(
         _('approved'),
         default=False,
@@ -272,6 +279,7 @@ class Announce(models.Model):
     desc = models.TextField()
     service = models.ForeignKey(get_user_model(), related_name='announces', on_delete=models.CASCADE, blank=True,
                                 null=True)
+    image = models.ImageField(upload_to=wrapper, blank=True, null=True)
     states = [
         ('draft', 'draft'),
         ('not_validated', 'not_validated'),

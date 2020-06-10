@@ -1,12 +1,11 @@
 from rest_framework import viewsets, generics, status, mixins
-
 from .helpers import modify_input_for_multiple_files
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser, FileUploadParser
@@ -14,6 +13,7 @@ from .pagination import CustomPagination
 from django_filters import rest_framework as filters
 import django_filters
 from django.http import Http404
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 
 
 # User Model View for admin access only
@@ -22,13 +22,13 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     lookup_field = 'uid'
-    filter_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    filter_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'is_french','role',
                      'is_approved', 'is_active', 'is_superuser', 'created_on']
-    filterset_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    filterset_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
                         'is_approved', 'is_active', 'is_superuser', 'created_on']
-    search_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    search_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
                      'is_approved', 'is_active', 'is_superuser', 'created_on']
-    ordering_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'role',
+    ordering_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
                        'is_approved', 'is_active', 'is_superuser', 'created_on']
     pagination_class = CustomPagination
 
@@ -64,7 +64,7 @@ class DeclarationFilter(filters.FilterSet):
 
     class Meta:
         model = Declaration
-        fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+        fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
                   'modified_at', 'validated_at']
 
 
@@ -75,13 +75,13 @@ class DeclarationView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
-    filter_fields = ['title',  'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+    filter_fields = ['title',  'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
                      'modified_at', 'validated_at']
-    filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    filterset_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
-    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
-    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    ordering_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                        'created_on', 'modified_at', 'validated_at']
 
 
@@ -352,7 +352,7 @@ class AnnounceComplementDemandView(viewsets.ModelViewSet):
     ordering_fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
 
 
-class StatisticsView(APIView):
+class UserStatisticsView(APIView):
     authentication_classes = []
     permission_classes = []
 
@@ -364,20 +364,6 @@ class StatisticsView(APIView):
         citoyens_approved_count = User.objects.filter(role='Client').filter(is_approved=True).count() # citoyen approved
         citoyens_non_approved_count = User.objects.filter(role='Client').filter(is_approved=False).count() # citoyen non approved
         current_services_count = User.objects.filter(role='Service').count() # services
-        ''' Declaration Statistics '''
-        all_declarations_count = Declaration.objects.all().count() # declarations
-        validated_declarations_count = Declaration.objects.filter(status='validated').count() # validated declarations
-        refused_declarations_count = Declaration.objects.filter(status='refused').count() # refused declarations
-        treated_declarations_count = Declaration.objects.filter(status= 'treated').count() # treated declarations
-        under_treatment_declarations_count = Declaration.objects.filter(status= 'under_treatment').count() # under treatment
-        critical_priority_dec = Declaration.objects.filter(priority=1).count() # critical priority
-        important_priority_dec = Declaration.objects.filter(priority=2).count() # important
-        normal_priority_dec = Declaration.objects.filter(priority=3).count() # normal
-        low_priority_dec = Declaration.objects.filter(priority=4).count() # low
-        ''' Announce Statistics '''
-        all_announces_count = Announce.objects.all().count()
-        published_announces_count = Announce.objects.filter(status='published').count()
-        removed_announces_count = Announce.objects.filter(status='removed').count()
 
         data = {
             'all_users': all_users_count,
@@ -386,19 +372,78 @@ class StatisticsView(APIView):
             'citoyens_approved': citoyens_approved_count,
             'citoyens_non_approved': citoyens_non_approved_count,
             'current_services':  current_services_count,
-            'declarations': all_declarations_count,
-            'validated_declarations': validated_declarations_count,
-            'refused_declarations': refused_declarations_count,
-            'treated_declarations': treated_declarations_count,
-            'under_treatment_declarations': under_treatment_declarations_count,
-            'critical_priority': critical_priority_dec,
-            'important_priority': important_priority_dec,
-            'normal_priority': normal_priority_dec,
-            'low_priority': low_priority_dec,
-            'all_announces': all_announces_count,
-            'published_announces': published_announces_count,
-            'removed_announces': removed_announces_count
             }
 
         return Response(data)
 
+class DeclarationStatisticsView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        ''' Users Statistics '''
+        critical = dict()
+        important = dict()
+        normal = dict()
+        low = dict()
+        status = ["validated", "refused", "under_treatment", "treated"]
+        for statu in status:
+            critical[statu] = Declaration.objects.filter(priority=1).filter(status=statu).count()
+            important[statu] = Declaration.objects.filter(priority=2).filter(status=statu).count()
+            normal[statu] = Declaration.objects.filter(priority=3).filter(status=statu).count()
+            low[statu] = Declaration.objects.filter(priority=4).filter(status=statu).count()
+            
+        data = {
+            'critical': critical,
+            'important': important,
+            'normal': normal,
+            'low': low
+        }
+        return Response(data)
+
+utc = pytz.UTC
+class AnnounceStatisticsView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def get(self, request, format=None):
+        ''' Announce Statistics '''
+        current_date = utc.localize(datetime.datetime.now())
+        print(current_date)
+        all_announces_count = Announce.objects.all().count()
+        published_announces_count = Announce.objects.filter(status='published').count()
+        removed_announces_count = Announce.objects.filter(status='removed').count()
+        expired_announces_count = Announce.objects.filter(end_at__lt=current_date).count()
+        active_announces_count = Announce.objects.filter(end_at__gte=current_date).count()
+
+        data = {
+            'all_announces_count': all_announces_count,
+            'published': published_announces_count,
+            'removed': removed_announces_count,
+            'expired': expired_announces_count,
+            'active': active_announces_count
+        }
+
+        return Response(data)
+
+
+# Pusher Beams AUTH
+class BeamsAuthView(APIView):
+    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        from pusher_push_notifications import PushNotifications
+        push_client = PushNotifications(
+            instance_id='65b0754a-0713-4b71-bc41-4d2abae63fc6',
+            secret_key='E1067A08CDB1C1F6DD92AF5CAFF4CA9C8F5B50740B6865B3CFACFC282A202A10',
+            )
+        user_id = str(request.user.uid)
+        beams_token = push_client.generate_token(user_id)      
+        # content = {
+        #     'user': request.user.first_name,
+        #     'user_id': request.user.uid,
+        #     'beams_token': beams_token,
+        #     'auth': request.auth,
+        # }
+        return Response(beams_token)

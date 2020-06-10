@@ -22,7 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
-from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, StatisticsView
+from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView
 
 
 def empty_view(request):
@@ -63,7 +63,11 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/documents/', DocumentView.as_view(), name='documents'),
     re_path(r'api/documents/(?P<pk>[0-9a-f-]+)', DocumentDetailView.as_view(), name='document'),
-    path('api/statistics/', StatisticsView.as_view(), name='Statistics'),
+    path('api/users-statistics/', UserStatisticsView.as_view(), name='Users_Statistics'),
+    path('api/declarations-statistics/', DeclarationStatisticsView.as_view(), name='Declarations_Statistics'),
+    path('api/announces-statistics/', AnnounceStatisticsView.as_view(), name='Announces_Statistics'),
+    # Beams
+    path('api/beams_auth/', BeamsAuthView.as_view(), name='beams_auth'),
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),

@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['uid', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id',
-                  'image', 'role', 'is_approved', 'is_active', 'is_superuser', 'created_on']
+                  'image', 'is_french', 'role', 'is_approved', 'is_active', 'is_superuser', 'created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
         extra_kwargs = {
@@ -175,11 +175,52 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         model = DeclarationRejection
         fields = ['drid', 'maire', 'reason', 'declaration', 'created_on']
         lookup_field = ['drid']
+    
+        ''' UNDER TESTS (don't judge this) '''
+    def push_notify(citoyen_id, maire_id, reason):
+        
+        from pusher_push_notifications import PushNotifications
+        
+        maire = User.objects.get(uid=maire_id)
 
+        push_client = PushNotifications(
+            instance_id='65b0754a-0713-4b71-bc41-4d2abae63fc6',
+            secret_key='E1067A08CDB1C1F6DD92AF5CAFF4CA9C8F5B50740B6865B3CFACFC282A202A10',
+            )
+
+        response = push_client.publish_to_users(
+            user_ids = [str(citoyen_id), str(maire_id)],
+            publish_body={
+                        'apns': {
+                            'aps': {
+                             'alert': 'Declaration rejected',
+                                   },
+                                },
+                        'fcm': {
+                         'notification': {
+                             'title': 'Declaration rejected',
+                             'body': 'Declaration rejcted by' + maire.first_name,
+                                         },
+                                },
+                       'web': {
+                         'notification': {
+                             'title': 'Declaration rejected',
+                             'body': 'Declaration rejcted by' + maire.first_name,
+                                         },
+                            },
+                        },
+            )
+        print(response['publishId'])
+        ''' UNDER TESTS (don't judge this)'''
     def create(self, validated_data):
+        declaration = validated_data['declaration']
+        reason = validated_data['reason']
+        citoyen = declaration.citizen
+        maire = validated_data['maire']
         instance = super().create(validated_data)
         instance.declaration.status = 'refused'
         instance.declaration.save()
+        DeclarationRejectionSerializer.push_notify(citoyen.uid, maire.uid, reason)
         return instance
 
 
@@ -236,12 +277,11 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
 
 utc = pytz.UTC
 
-
 # Announce serializer
 class AnnounceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announce
-        fields = ['aid', 'title', 'desc', 'service', 'status', 'created_on', 'start_at', 'end_at']
+        fields = ['aid', 'title', 'desc', 'service', 'image', 'status', 'created_on', 'start_at', 'end_at']
         lookup_field = ['aid']
 
     def validate(self, validated_data):
@@ -263,7 +303,7 @@ class AnnounceNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Announce
-        fields = ['aid', 'title', 'desc', 'service', 'status', 'created_on', 'start_at', 'end_at']
+        fields = ['aid', 'title', 'desc', 'service', 'image', 'status', 'created_on', 'start_at', 'end_at']
         lookup_field = ['aid']
 
     def validate(self, validated_data):
