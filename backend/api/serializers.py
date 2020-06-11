@@ -174,7 +174,7 @@ class DeclarationSerializer(serializers.ModelSerializer):
         maire = User.objects.filter(role='Maire').first()
         service_id = ''
         title = 'Déclaration modifiée'
-        body = 'statut actuel: ' + declaration_state
+        body ='la déclaration '+ declaration_title + ' a été modifiée et le statut actuel: ' + declaration_state
         push_notify(citoyen.uid, maire.uid, service_id, title, body)
         return super().update(instance, validated_data)
 
@@ -204,7 +204,7 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         maire = validated_data['maire']
         service = declaration.service
         title = 'Rejection'
-        body = 'La déclaration : '+ declaration.title +' a été rejecté par ' + maire.first_name + 'et la reason: '+ reason
+        body = 'La déclaration : '+ declaration.title +' a été rejeté par ' + maire.first_name +''+ 'et la raison c`est: '+ reason
         instance = super().create(validated_data)
         instance.declaration.status = 'refused'
         instance.declaration.save()
@@ -220,9 +220,17 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
         lookup_field = ['dcid']
 
     def create(self, validated_data):
+        declaration = validated_data['declaration']
+        reason = validated_data['reason']
+        maire = validated_data['maire']
+        citoyen = declaration.citizen
+        service_id = ''
+        title = 'Demande de complément'
+        body = 'La déclaration : '+ declaration.title +' besoin de complément d`aprés le maire ' + maire.first_name +''+ 'et la raison c`est: '+ reason
         instance = super().create(validated_data)
         instance.declaration.status = 'lack_of_info'
         instance.declaration.save()
+        push_notify(citoyen.uid, maire.uid, service_id, title, body)
         return instance
 
 
