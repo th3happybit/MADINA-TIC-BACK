@@ -61,7 +61,7 @@ states = [
 
 class DeclarationFilter(filters.FilterSet):
     status = django_filters.MultipleChoiceFilter(choices=states)
-
+    has_parent = django_filters.BooleanFilter(field_name="parent_declaration", lookup_expr='isnull', exclude=True)
     class Meta:
         model = Declaration
         fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
@@ -92,13 +92,13 @@ class DeclarationNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
-    filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'created_on',
+    filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'parent_declaration', 'service', 'priority', 'status', 'dtype', 'created_on',
                      'modified_at', 'validated_at']
-    filterset_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    filterset_fields = ['title', 'address', 'geo_cord', 'citizen',  'parent_declaration', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
-    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name', 'parent_declaration',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
-    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype',
+    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'parent_declaration',
                        'created_on', 'modified_at', 'validated_at']
 
 
