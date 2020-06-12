@@ -14,7 +14,7 @@ from django_filters import rest_framework as filters
 import django_filters
 from django.http import Http404
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
-
+from .permissions import ReadOnly
 
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
@@ -72,6 +72,7 @@ class DeclarationFilter(filters.FilterSet):
 class DeclarationView(viewsets.ModelViewSet):
     queryset = Declaration.objects.all()
     serializer_class = DeclarationSerializer
+    permission_classes = [IsAuthenticated|ReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
@@ -89,6 +90,7 @@ class DeclarationView(viewsets.ModelViewSet):
 class DeclarationNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Declaration.objects.all()
     serializer_class = DeclarationNestedSerializer
+    permission_classes = [IsAuthenticated|ReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DeclarationFilter
     lookup_field = 'did'
@@ -354,7 +356,7 @@ class AnnounceComplementDemandView(viewsets.ModelViewSet):
 
 class UserStatisticsView(APIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated|ReadOnly]
 
     def get(self, request, format=None):
         ''' Users Statistics '''
@@ -378,7 +380,7 @@ class UserStatisticsView(APIView):
 
 class DeclarationStatisticsView(APIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated|ReadOnly]
 
     def get(self, request, format=None):
         ''' Users Statistics '''
@@ -404,7 +406,7 @@ class DeclarationStatisticsView(APIView):
 utc = pytz.UTC
 class AnnounceStatisticsView(APIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated|ReadOnly]
     
     def get(self, request, format=None):
         ''' Announce Statistics '''

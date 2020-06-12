@@ -1,5 +1,12 @@
 from rest_framework import permissions
+from rest_framework.permissions import SAFE_METHODS
 
+class ReadOnly(permissions.BasePermission):
+	"""
+	so we'll always allow GET, HEAD or OPTIONS requests.
+	"""
+	def has_permission(self, request, view):
+		return request.method in SAFE_METHODS
 
 class IsOwnerCitizen(permissions.BasePermission):
 	"""
