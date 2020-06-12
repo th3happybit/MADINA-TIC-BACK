@@ -299,6 +299,7 @@ class AnnounceFilter(filters.FilterSet):
 class AnnounceView(viewsets.ModelViewSet):
     queryset = Announce.objects.all()
     serializer_class = AnnounceSerializer
+    permission_classes = [IsAuthenticated|ReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = AnnounceFilter
     search_fields = ['title', 'status', 'service__uid', 'created_on', 'start_at', 'end_at']
@@ -309,6 +310,7 @@ class AnnounceView(viewsets.ModelViewSet):
 class AnnounceNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Announce.objects.all()
     serializer_class = AnnounceNestedSerializer
+    permission_classes = [IsAuthenticated|ReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = AnnounceFilter
     filter_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
