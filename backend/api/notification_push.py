@@ -1,5 +1,11 @@
+from django.conf import settings
 from pusher_push_notifications import PushNotifications
+import pusher 
 
+
+"""
+Notification push with pusher Beams
+"""
 def push_notify(citoyen_id, maire_id, service_id, title, body):
 
     push_client = PushNotifications(
@@ -20,12 +26,19 @@ def push_notify(citoyen_id, maire_id, service_id, title, body):
                              'body': body,
                                          },
                                 },
-                       'web': {
-                         'notification': {
-                             'title': title,
-                             'body': body,
-                                         },
-                            },
                         },
             )
     print(response['publishId'])
+
+"""
+Notification push with pusher channels
+"""
+def channels_notify(channel, event, data):
+    pusher_client = pusher.Pusher(
+            app_id= settings.PUSHER_APP_ID,
+            key= settings.PUSHER_KEY,
+            secret= settings.PUSHER_SECRET,
+            cluster= settings.PUSHER_CLUSTER
+                )
+    
+    return pusher_client.trigger(channel, event, {u'message': data})

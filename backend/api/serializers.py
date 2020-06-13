@@ -162,9 +162,19 @@ class DeclarationSerializer(serializers.ModelSerializer):
         service_id = ''
         declaration_title = validated_data['title']
         title = 'Déclaration crée'
-        body = 'La déclaration ' +declaration_title+ ' crée par '+ citoyen.first_name 
+        body = 'La déclaration ' +declaration_title+ ' crée par '+ citoyen.first_name
+
         instance = super().create(validated_data)
+        # beams notification
         push_notify(citoyen.uid, maire.uid, service_id, title, body)
+        # channels notification 
+        data = {
+            'title': title,
+            'body' : body
+        }
+        channel = u'Declaration'
+        event = u'Creation'
+        channels_notify(channel, event, data)
         return instance
 
     def update(self, instance, validated_data):
@@ -175,7 +185,16 @@ class DeclarationSerializer(serializers.ModelSerializer):
         service_id = ''
         title = 'Déclaration modifiée'
         body ='la déclaration '+ declaration_title + ' a été modifiée et le statut actuel: ' + declaration_state
+        # beams notif
         push_notify(citoyen.uid, maire.uid, service_id, title, body)
+        # channels notif
+        data = {
+            'title': title,
+            'body' : body
+        }
+        channel = u'Declaration'
+        event = u'Update'
+        channels_notify(channel, event, data)
         return super().update(instance, validated_data)
 
 # Declaration serializer
@@ -205,10 +224,20 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         service = declaration.service
         title = 'Rejection'
         body = 'La déclaration : '+ declaration.title +' a été rejeté par ' + maire.first_name +''+ 'et la raison c`est: '+ reason
+
         instance = super().create(validated_data)
         instance.declaration.status = 'refused'
         instance.declaration.save()
+        # beams notification
         push_notify(citoyen.uid, maire.uid, service.uid, title, body)
+        # channels notification
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Declaration'
+        event = u'Rejection'
+        channels_notify(channel, event, data)
         return instance
 
 
@@ -227,10 +256,18 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
         service_id = ''
         title = 'Demande de complément'
         body = 'La déclaration : '+ declaration.title +' besoin de complément d`aprés le maire ' + maire.first_name +''+ 'et la raison c`est: '+ reason
+
         instance = super().create(validated_data)
         instance.declaration.status = 'lack_of_info'
         instance.declaration.save()
         push_notify(citoyen.uid, maire.uid, service_id, title, body)
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Declaration'
+        event = u'Complement'
+        channels_notify(channel, event, data)
         return instance
 
 
@@ -241,7 +278,24 @@ class ReportSerializer(serializers.ModelSerializer):
         fields = ['rid', 'declaration', 'title', 'desc', 'service', 'status', 'created_on', 'modified_at',
                   'validated_at']
         lookup_field = ['rid']
+    def create(self, validated_data):
+        report_title = validated_data["title"]
+        service = validated_data["service"]
+        title = 'Rapport crée'
+        body = 'le rapport :' +''+ report_title+'a été crée par' +''+service.first_name
 
+        instance = super().create(validated_data)
+        instance.report.status = 'refused'
+        instance.report.save()
+        # send notification 
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Report'
+        event = u'Creation'
+        channels_notify(channel, event, data)
+        return instance
 
 # Report rejection serializer
 class ReportRejectionSerializer(serializers.ModelSerializer):
@@ -251,9 +305,23 @@ class ReportRejectionSerializer(serializers.ModelSerializer):
         lookup_field = ['rrid']
 
     def create(self, validated_data):
+        report = validated_data["report"]
+        reason = validated_data["reason"]
+        maire = validated_data['maire']
+        title = 'le rapport Rejecté'
+        body = 'le rapport :' +''+ report.title+'a été rejecté a cause de :'+''+reason+'' 'par' +''+maire.first_name
+
         instance = super().create(validated_data)
         instance.report.status = 'refused'
         instance.report.save()
+        # send channels notif
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Report'
+        event = u'Rejection'
+        channels_notify(channel, event, data)
         return instance
 
 
@@ -265,9 +333,23 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
         lookup_field = ['rcid']
 
     def create(self, validated_data):
+        report = validated_data["report"]
+        reason = validated_data["reason"]
+        maire = validated_data['maire']
+        title = 'Demande de complément'
+        body = 'le rapport :' +''+ report.title+'a besoin de complément a cause de :'+''+reason+'' 'par' +''+maire.first_name
+
         instance = super().create(validated_data)
         instance.report.status = 'lack_of_info'
         instance.report.save()
+        # send channels notif
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Report'
+        event = u'Complement'
+        channels_notify(channel, event, data)
         return instance
 
 
@@ -279,7 +361,24 @@ class AnnounceSerializer(serializers.ModelSerializer):
         model = Announce
         fields = ['aid', 'title', 'desc', 'service', 'image', 'status', 'created_on', 'start_at', 'end_at']
         lookup_field = ['aid']
+    
+    def create(self, validated_data):
+        announce_title = validated_data["title"]
+        service = validated_data ["service"]
+        title = 'Announce crée'
+        body = 'l`announce :' +''+ announce_title+'a été crée par' +''+service.first_name
 
+        instance = super().create(validated_data)
+        # send channels notif
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Announce'
+        event = u'Creation'
+        channels_notify(channel, event, data)
+        return instance
+    
     def validate(self, validated_data):
         current_date = utc.localize(datetime.datetime.now())  # for comparaison we use same date format
 
@@ -321,3 +420,24 @@ class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
         model = AnnounceComplementDemand
         fields = ['acid', 'maire', 'announce', 'reason', 'created_on']
         lookup_field = ['acid']
+
+    def create(self, validated_data):
+        announce = validated_data["announce"]
+        maire = validated_data["maire"]
+        reason = validated_data["reason"]
+        title = 'Demande de complément'
+        body = 'l`announce :' +''+ announce.title+'a besoin de complément a cause de :'+''+reason+'' 'par' +''+maire.first_name
+        
+        instance = super().create(validated_data)
+        instance.report.status = 'lack_of_info'
+        instance.report.save()
+        # send channels notif
+        data = {
+            'title': title,
+            'body': body
+        }
+        channel = u'Announce'
+        event = u'Complement'
+        channels_notify(channel, event, data)
+
+        return instance
