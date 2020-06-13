@@ -15,7 +15,10 @@ import django_filters
 from django.http import Http404
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 from .permissions import ReadOnly
-
+from django.conf import settings
+import pusher
+from rest_framework.decorators import api_view
+import json
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -451,3 +454,48 @@ class BeamsAuthView(APIView):
         #     'auth': request.auth,
         # }
         return Response(beams_token)
+
+class NotificationView(viewsets.ModelViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+    filterset_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+    search_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+    ordering_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+    authentication_classes = []
+    permission_classes = []
+
+
+class PusherAuthView(APIView):
+    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    pusher_client = pusher.Pusher(
+        app_id= settings.PUSHER_APP_ID,
+        key= settings.PUSHER_KEY,
+        secret= settings.PUSHER_SECRET,
+        cluster= settings.PUSHER_CLUSTER
+            )
+
+    def get(self, request, format=None):
+        channel_name = self.request.query_params.get('channel_name')
+        socket_id = self.request.query_params.get('socket_id')
+
+        auth = self.pusher_client.authenticate(
+            channel = channel_name,
+            socket_id = socket_id
+            )
+        
+        return Response(auth)
+    
+    def post(self, request):
+        channel_name = self.request.data['channel_name']
+        socket_id = self.request.data['socket_id']
+
+        auth = self.pusher_client.authenticate(
+            channel = channel_name,
+            socket_id = socket_id
+            )
+        
+        return Response(auth)
