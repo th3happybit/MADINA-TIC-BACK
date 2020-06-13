@@ -22,7 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
-from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView
+from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView, PusherAuthView
 
 
 def empty_view(request):
@@ -43,6 +43,7 @@ router.register(r'announces', views.AnnounceView)
 router.register(r'announces_complement_demand', views.AnnounceComplementDemandView)
 router.register(r'announce_nested', views.AnnounceNestedView)
 router.register(r'declaration_nested', views.DeclarationNestedView)
+router.register(r'notifications', views.NotificationView)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -68,6 +69,8 @@ urlpatterns = [
     path('api/announces-statistics/', AnnounceStatisticsView.as_view(), name='Announces_Statistics'),
     # Beams
     path('api/beams_auth/', BeamsAuthView.as_view(), name='beams_auth'),
+    # Pusher
+    path('api/pusher/auth', PusherAuthView.as_view() , name='pusher_auth'),
     # rest auth using token routes
     url(r'api/', include('rest_auth.urls')),
     url(r'api/registration/', include('rest_auth.registration.urls')),

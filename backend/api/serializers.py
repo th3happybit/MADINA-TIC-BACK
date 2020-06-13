@@ -175,6 +175,13 @@ class DeclarationSerializer(serializers.ModelSerializer):
         channel = u'Declaration'
         event = u'Creation'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.citoyen = citoyen
+        notification.save()
         return instance
 
     def update(self, instance, validated_data):
@@ -195,6 +202,13 @@ class DeclarationSerializer(serializers.ModelSerializer):
         channel = u'Declaration'
         event = u'Update'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.citoyen = citoyen
+        notification.save()
         return super().update(instance, validated_data)
 
 # Declaration serializer
@@ -238,6 +252,14 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         channel = u'Declaration'
         event = u'Rejection'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.citoyen = citoyen
+        notification.service = service
+        notification.save()
         return instance
 
 
@@ -268,6 +290,13 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
         channel = u'Declaration'
         event = u'Complement'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.citoyen = citoyen
+        notification.save()
         return instance
 
 
@@ -295,6 +324,13 @@ class ReportSerializer(serializers.ModelSerializer):
         channel = u'Report'
         event = u'Creation'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.service = service
+        notification.save()
         return instance
 
 # Report rejection serializer
@@ -306,6 +342,7 @@ class ReportRejectionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         report = validated_data["report"]
+        service = report.service
         reason = validated_data["reason"]
         maire = validated_data['maire']
         title = 'le rapport Rejecté'
@@ -322,6 +359,13 @@ class ReportRejectionSerializer(serializers.ModelSerializer):
         channel = u'Report'
         event = u'Rejection'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.service = service
+        notification.save()
         return instance
 
 
@@ -334,6 +378,7 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         report = validated_data["report"]
+        service = report.service
         reason = validated_data["reason"]
         maire = validated_data['maire']
         title = 'Demande de complément'
@@ -350,6 +395,13 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
         channel = u'Report'
         event = u'Complement'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.service = service
+        notification.save()
         return instance
 
 
@@ -377,6 +429,13 @@ class AnnounceSerializer(serializers.ModelSerializer):
         channel = u'Announce'
         event = u'Creation'
         channels_notify(channel, event, data)
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.service = service
+        notification.save()
         return instance
     
     def validate(self, validated_data):
@@ -423,14 +482,15 @@ class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         announce = validated_data["announce"]
+        service = announce.service
         maire = validated_data["maire"]
         reason = validated_data["reason"]
         title = 'Demande de complément'
         body = 'l`announce :' +''+ announce.title+'a besoin de complément a cause de :'+''+reason+'' 'par' +''+maire.first_name
         
         instance = super().create(validated_data)
-        instance.report.status = 'lack_of_info'
-        instance.report.save()
+        instance.announce.status = 'lack_of_info'
+        instance.announce.save()
         # send channels notif
         data = {
             'title': title,
@@ -439,5 +499,18 @@ class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
         channel = u'Announce'
         event = u'Complement'
         channels_notify(channel, event, data)
-
+        # save the notification for users no logged in
+        notification = Notification()
+        notification.title = title
+        notification.body = body
+        notification.maire = maire
+        notification.service = service
+        notification.save()
         return instance
+
+# Notification Serializer
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+        lookup_field = 'nid'

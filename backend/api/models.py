@@ -308,3 +308,23 @@ class AnnounceComplementDemand(models.Model):
 
     def __str__(self):
         return str(self.acid) + " - " + self.reason + " - " + str(self.created_on)
+
+# Notification model
+class Notification(models.Model):
+    nid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200, blank=True)
+    body = models.TextField(blank=True)
+    seen = models.BooleanField(
+        _('seen'),
+        default=False,
+        help_text=_(
+            'Designates whether this notification should be treated as seen. '
+        ),
+    )
+    citoyen = models.ForeignKey(get_user_model(), related_name='notification.citoyen+', on_delete=models.CASCADE, blank=True, null=True)
+    maire = models.ForeignKey(get_user_model(), related_name='notification.maire+', on_delete=models.CASCADE, blank=True, null=True)
+    service = models.ForeignKey(get_user_model(), related_name='notification.service+', on_delete=models.CASCADE, blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+        
+    def __str__(self):
+        return str(self.nid) + " - " + self.title + " - " + str(self.created_on)
