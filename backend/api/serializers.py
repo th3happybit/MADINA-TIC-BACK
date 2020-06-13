@@ -159,14 +159,13 @@ class DeclarationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         citoyen = validated_data['citizen']
         maire = User.objects.filter(role='Maire').first()
-        service_id = ''
         declaration_title = validated_data['title']
         title = 'Déclaration crée'
         body = 'La déclaration ' +declaration_title+ ' crée par '+ citoyen.first_name
 
         instance = super().create(validated_data)
         # beams notification
-        push_notify(citoyen.uid, maire.uid, service_id, title, body)
+        push_notify(citoyen.uid, maire.uid, title, body)
         # channels notification 
         data = {
             'title': title,
@@ -189,11 +188,10 @@ class DeclarationSerializer(serializers.ModelSerializer):
         declaration_title = instance.title
         citoyen = instance.citizen
         maire = User.objects.filter(role='Maire').first()
-        service_id = ''
         title = 'Déclaration modifiée'
         body ='la déclaration '+ declaration_title + ' a été modifiée et le statut actuel: ' + declaration_state
         # beams notif
-        push_notify(citoyen.uid, maire.uid, service_id, title, body)
+        push_notify(citoyen.uid, maire.uid, title, body)
         # channels notif
         data = {
             'title': title,
@@ -243,7 +241,7 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         instance.declaration.status = 'refused'
         instance.declaration.save()
         # beams notification
-        push_notify(citoyen.uid, maire.uid, service.uid, title, body)
+        push_notify(citoyen.uid, maire.uid, title, body)
         # channels notification
         data = {
             'title': title,
@@ -275,14 +273,13 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
         reason = validated_data['reason']
         maire = validated_data['maire']
         citoyen = declaration.citizen
-        service_id = ''
         title = 'Demande de complément'
         body = 'La déclaration : '+ declaration.title +' besoin de complément d`aprés le maire ' + maire.first_name +''+ 'et la raison c`est: '+ reason
 
         instance = super().create(validated_data)
         instance.declaration.status = 'lack_of_info'
         instance.declaration.save()
-        push_notify(citoyen.uid, maire.uid, service_id, title, body)
+        push_notify(citoyen.uid, maire.uid, title, body)
         data = {
             'title': title,
             'body': body
