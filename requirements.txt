@@ -10,3 +10,4 @@ django-cors-headers
 django-allauth
 drf-yasg
 pusher_push_notifications
+pusher
