@@ -159,6 +159,8 @@ class DeclarationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         citoyen = validated_data['citizen']
         maire = User.objects.filter(role='Maire').first()
+        if 'service' in validated_data:
+            service = validated_data['service']
         declaration_title = validated_data['title']
         title = 'Déclaration crée'
         body = 'La déclaration ' +declaration_title+ ' crée par '+ citoyen.first_name
@@ -179,7 +181,6 @@ class DeclarationSerializer(serializers.ModelSerializer):
         notification.title = title
         notification.body = body
         notification.maire = maire
-        notification.citoyen = citoyen
         notification.save()
         return instance
 
@@ -202,10 +203,19 @@ class DeclarationSerializer(serializers.ModelSerializer):
         channels_notify(channel, event, data)
         # save the notification for users no logged in
         notification = Notification()
-        notification.title = title
-        notification.body = body
-        notification.maire = maire
-        notification.citoyen = citoyen
+        if 'status' in validated_data:
+            status = validated_data["status"]
+            if status == 'validated':
+                notification.title = title
+                notification.body = body
+                notification.citoyen = citoyen
+                service = validated_data['service']
+                notification.service = service
+            else:
+                notification.title = title
+                notification.body = body
+                notification.citoyen = citoyen
+                notification.maire = maire
         notification.save()
         return super().update(instance, validated_data)
 
@@ -254,9 +264,7 @@ class DeclarationRejectionSerializer(serializers.ModelSerializer):
         notification = Notification()
         notification.title = title
         notification.body = body
-        notification.maire = maire
         notification.citoyen = citoyen
-        notification.service = service
         notification.save()
         return instance
 
@@ -291,7 +299,6 @@ class DeclarationComplementDemandSerializer(serializers.ModelSerializer):
         notification = Notification()
         notification.title = title
         notification.body = body
-        notification.maire = maire
         notification.citoyen = citoyen
         notification.save()
         return instance
@@ -326,7 +333,6 @@ class ReportSerializer(serializers.ModelSerializer):
         notification.title = title
         notification.body = body
         notification.maire = maire
-        notification.service = service
         notification.save()
         return instance
 
@@ -360,7 +366,6 @@ class ReportRejectionSerializer(serializers.ModelSerializer):
         notification = Notification()
         notification.title = title
         notification.body = body
-        notification.maire = maire
         notification.service = service
         notification.save()
         return instance
@@ -396,7 +401,6 @@ class ReportComplementDemandSerializer(serializers.ModelSerializer):
         notification = Notification()
         notification.title = title
         notification.body = body
-        notification.maire = maire
         notification.service = service
         notification.save()
         return instance
@@ -431,7 +435,6 @@ class AnnounceSerializer(serializers.ModelSerializer):
         notification.title = title
         notification.body = body
         notification.maire = maire
-        notification.service = service
         notification.save()
         return instance
     
@@ -500,7 +503,6 @@ class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
         notification = Notification()
         notification.title = title
         notification.body = body
-        notification.maire = maire
         notification.service = service
         notification.save()
         return instance
