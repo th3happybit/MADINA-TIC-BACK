@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['uid', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id',
-                  'image', 'is_french', 'role', 'is_approved', 'is_active', 'is_superuser', 'created_on']
+                  'image', 'is_french', 'role', 'is_approved', 'is_active', 'notif_seen', 'is_superuser', 'created_on']
         read_only_fields = ['is_superuser']
         lookup_field = 'uid'
         extra_kwargs = {
@@ -511,5 +511,5 @@ class AnnounceComplementDemandSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+        fields = ['nid', 'title', 'body', 'citoyen', 'maire', 'service', 'created_on']
         lookup_field = 'nid'

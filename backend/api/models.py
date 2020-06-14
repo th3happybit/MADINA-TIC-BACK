@@ -117,6 +117,13 @@ class User(AbstractUser):
             'Designates whether this user should be treated as approved. '
         ),
     )
+    notif_seen = models.BooleanField(
+        _('notif_seen'),
+        default=False,
+        help_text=_(
+            'Designates whether the notification for this user has seen. '
+        ),
+    )
     national_id = models.CharField(max_length=200, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -314,13 +321,6 @@ class Notification(models.Model):
     nid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200, blank=True)
     body = models.TextField(blank=True)
-    seen = models.BooleanField(
-        _('seen'),
-        default=False,
-        help_text=_(
-            'Designates whether this notification should be treated as seen. '
-        ),
-    )
     citoyen = models.ForeignKey(get_user_model(), related_name='notification.citoyen+', on_delete=models.CASCADE, blank=True, null=True)
     maire = models.ForeignKey(get_user_model(), related_name='notification.maire+', on_delete=models.CASCADE, blank=True, null=True)
     service = models.ForeignKey(get_user_model(), related_name='notification.service+', on_delete=models.CASCADE, blank=True, null=True)

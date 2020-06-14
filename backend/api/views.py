@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser, FileUploadParser
-from .pagination import CustomPagination
+from .pagination import CustomPagination, NotificationCustomPagination
 from django_filters import rest_framework as filters
 import django_filters
 from django.http import Http404
@@ -26,13 +26,13 @@ class UserView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     lookup_field = 'uid'
     filter_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id', 'is_french','role',
-                     'is_approved', 'is_active', 'is_superuser', 'created_on']
+                     'is_approved', 'is_active', 'notif_seen', 'is_superuser', 'created_on']
     filterset_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
-                        'is_approved', 'is_active', 'is_superuser', 'created_on']
+                        'is_approved', 'is_active', 'notif_seen', 'is_superuser', 'created_on']
     search_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
-                     'is_approved', 'is_active', 'is_superuser', 'created_on']
+                     'is_approved', 'is_active', 'notif_seen', 'is_superuser', 'created_on']
     ordering_fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'address', 'national_id','is_french', 'role',
-                       'is_approved', 'is_active', 'is_superuser', 'created_on']
+                       'is_approved', 'is_active', 'notif_seen', 'is_superuser', 'created_on']
     pagination_class = CustomPagination
 
 
@@ -459,12 +459,13 @@ class NotificationView(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filter_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
-    filterset_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
-    search_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
-    ordering_fields = ['nid', 'title', 'body', 'seen', 'citoyen', 'maire', 'service', 'created_on']
+    filter_fields = ['nid', 'title', 'body', 'citoyen', 'maire', 'service', 'created_on']
+    filterset_fields = ['nid', 'title', 'body', 'citoyen', 'maire', 'service', 'created_on']
+    search_fields = ['nid', 'title', 'body', 'citoyen', 'maire', 'service', 'created_on']
+    ordering_fields = ['nid', 'title', 'body', 'citoyen', 'maire', 'service', 'created_on']
     authentication_classes = []
     permission_classes = []
+    pagination_class = NotificationCustomPagination
 
 
 class PusherAuthView(APIView):
