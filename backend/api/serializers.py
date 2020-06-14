@@ -418,6 +418,7 @@ class AnnounceSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         announce_title = validated_data["title"]
         service = validated_data ["service"]
+        maire = User.objects.filter(role='Maire').first()
         title = 'Announce crée'
         body = 'l`announce :' +''+ announce_title+'a été crée par' +''+service.first_name
 
