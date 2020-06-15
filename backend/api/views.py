@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser, FileUploadParser
-from .pagination import CustomPagination, NotificationCustomPagination
+from .pagination import CustomPagination, NotificationCustomPagination, HomeDeclarationCustomPagination
 from django_filters import rest_framework as filters
 import django_filters
 from django.http import Http404
@@ -505,6 +505,7 @@ class PusherAuthView(APIView):
 class DeclarationHomeView(APIView):
     serializer_class = DeclarationSerializer
     permission_classes = [IsAuthenticated|ReadOnly]
+    pagination_class = HomeDeclarationCustomPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     lookup_field = 'did'
     filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'parent_declaration', 'service', 'priority', 'status', 'dtype', 'created_on',
@@ -515,6 +516,33 @@ class DeclarationHomeView(APIView):
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
     ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'parent_declaration',
                        'created_on', 'modified_at', 'validated_at']
+    
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+        
+    def paginate_queryset(self, queryset):
+         """
+         Return a single page of results, or `None` if pagination is disabled.
+         """
+         if self.paginator is None:
+             return None
+         return self.paginator.paginate_queryset(queryset, self.request, view=self)
+         
+    def get_paginated_response(self, data):
+         """
+         Return a paginated style `Response` object for the given output data.
+         """
+         assert self.paginator is not None
+         return self.paginator.get_paginated_response(data) 
 
     """ filter the queryset with whichever filter backend is in use """
     def filter_queryset(self, queryset):
@@ -530,5 +558,9 @@ class DeclarationHomeView(APIView):
 
     def get(self, request):
         the_filtered_qs = self.filter_queryset(self.get_queryset())
-        serializer = DeclarationSerializer(the_filtered_qs, many=True)
+        page = self.paginate_queryset( the_filtered_qs)
+        if page is not None:
+            serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
+        else:
+            serializer = DeclarationSerializer(the_filtered_qs, many=True)
         return Response(serializer.data)
