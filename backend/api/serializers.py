@@ -1,6 +1,6 @@
 import binascii
 import pytz
-
+from django.conf import settings
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from django.contrib.auth.models import Group
@@ -527,3 +527,20 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ['nid', 'title', 'body', 'citoyen', 'maire', 'service', 'created_on']
         lookup_field = 'nid'
+
+class FeedBackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedBack
+        fields = ['fid', 'sender_first_name', 'sender_last_name', 'sender_email', 'subject', 'message']
+        lookup_field = 'fid'
+
+    def create(self, validated_data):
+        recipient_list = settings.ADMINS
+        from_email = validated_data['sender_email']
+        if 'message' and 'subject' in validated_data:
+            message = validated_data['message']
+            subject = validated_data['subject']
+        instance = super().create(validated_data)
+        instance.save()
+        FeedBack.email_admins(subject, message, from_email, recipient_list) 
+        return instance

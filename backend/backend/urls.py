@@ -44,6 +44,7 @@ router.register(r'announces_complement_demand', views.AnnounceComplementDemandVi
 router.register(r'announce_nested', views.AnnounceNestedView)
 router.register(r'declaration_nested', views.DeclarationNestedView)
 router.register(r'notifications', views.NotificationView)
+router.register(r'feedbacks', views.FeedbackView)
 
 schema_view = get_schema_view(
     openapi.Info(
