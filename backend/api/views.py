@@ -308,7 +308,6 @@ class AnnounceView(viewsets.ModelViewSet):
     search_fields = ['title', 'status', 'service__uid', 'created_on', 'start_at', 'end_at']
     ordering_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
 
-
 # Announce Model View
 class AnnounceNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Announce.objects.all()
@@ -339,13 +338,13 @@ class ConfirmEmailView(APIView):
                 try:
                     email_confirmation = queryset.get(key=key.lower())
                 except EmailConfirmation.DoesNotExist:
-                    return HttpResponseRedirect('http://13.92.195.8/login/')  # in case of failure
+                    return HttpResponseRedirect('https://madina-tic.ml/login')  # in case of failure
         return email_confirmation
 
     def get(self, *args, **kwargs):
         self.object = confirmation = self.get_object()
         confirmation.confirm(self.request)
-        return HttpResponseRedirect('http://13.92.195.8/login')  # login page redirection
+        return HttpResponseRedirect('https://madina-tic.ml/login')  # login page redirection
 
 
 # Announce Complement Demand View
@@ -563,4 +562,25 @@ class DeclarationHomeView(APIView):
             serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
         else:
             serializer = DeclarationSerializer(the_filtered_qs, many=True)
+        return Response(serializer.data)
+
+# TO DO
+class NotificationCleanView(APIView):
+    serializer_class = NotificationSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+
+    def filter_queryset(self, queryset):
+        for backend in list(self.filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, self)
+
+        return queryset
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Notification.objects.filter(citoyen=user)
+
+    def get(self, request):
+        qs = self.filter_queryset(self.get_queryset())
+        print(qs)
+        serializer = NotificationSerializer(qs, many=True)
         return Response(serializer.data)

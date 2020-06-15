@@ -410,6 +410,8 @@ utc = pytz.UTC
 
 # Announce serializer
 class AnnounceSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(max_length=None, allow_empty_file=True, allow_null=True, required=False)
+
     class Meta:
         model = Announce
         fields = ['aid', 'title', 'desc', 'service', 'image', 'status', 'created_on', 'start_at', 'end_at']
@@ -438,6 +440,17 @@ class AnnounceSerializer(serializers.ModelSerializer):
         notification.maire = maire
         notification.save()
         return instance
+
+    """ update to clear the old image """
+    def update(self, instance, validated_data):
+        if 'image' in validated_data:
+            image = validated_data['image']
+        if image :
+            pass
+        else: 
+            instance.image.delete() # remove the old one from
+        return super().update(instance, validated_data)
+
     
     def validate(self, validated_data):
         current_date = utc.localize(datetime.datetime.now())  # for comparaison we use same date format
