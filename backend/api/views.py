@@ -83,7 +83,7 @@ class DeclarationView(viewsets.ModelViewSet):
                      'modified_at', 'validated_at']
     filterset_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
-    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration__did', 'parent_declaration__title', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
     ordering_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                        'created_on', 'modified_at', 'validated_at']
@@ -500,3 +500,35 @@ class PusherAuthView(APIView):
             )
         
         return Response(auth)
+
+
+class DeclarationHomeView(APIView):
+    serializer_class = DeclarationSerializer
+    permission_classes = [IsAuthenticated|ReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    lookup_field = 'did'
+    filter_fields = ['title', 'address', 'geo_cord', 'citizen', 'parent_declaration', 'service', 'priority', 'status', 'dtype', 'created_on',
+                     'modified_at', 'validated_at']
+    filterset_fields = ['title', 'address', 'geo_cord', 'citizen',  'parent_declaration', 'service', 'priority', 'status', 'dtype',
+                        'created_on', 'modified_at', 'validated_at']
+    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name', 'parent_declaration',
+                     'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
+    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'parent_declaration',
+                       'created_on', 'modified_at', 'validated_at']
+
+    """ filter the queryset with whichever filter backend is in use """
+    def filter_queryset(self, queryset):
+        for backend in list(self.filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, self)
+
+        return queryset
+
+    """exclude the declarations for the current user"""
+    def get_queryset(self):
+        user = self.request.user
+        return Declaration.objects.exclude(citizen=user)
+
+    def get(self, request):
+        the_filtered_qs = self.filter_queryset(self.get_queryset())
+        serializer = DeclarationSerializer(the_filtered_qs, many=True)
+        return Response(serializer.data)
