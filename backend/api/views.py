@@ -563,6 +563,12 @@ class DeclarationHomeView(APIView):
         else:
             serializer = DeclarationSerializer(the_filtered_qs, many=True)
         return Response(serializer.data)
+# TO DO iplement recaptcha for feedback form
+class FeedbackView(viewsets.ModelViewSet):
+    serializer_class = FeedBackSerializer
+    queryset = FeedBack.objects.all()
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    lookup_field = 'fid'
 
 # TO DO
 class NotificationCleanView(APIView):

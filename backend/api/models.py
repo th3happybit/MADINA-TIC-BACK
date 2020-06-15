@@ -328,3 +328,23 @@ class Notification(models.Model):
         
     def __str__(self):
         return str(self.nid) + " - " + self.title + " - " + str(self.created_on)
+
+# FeedBack model
+class FeedBack(models.Model):
+    fid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender_first_name = models.CharField(_('first name'), max_length=150, blank=True)
+    sender_last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    sender_email = models.EmailField(_('email address'))
+    subject = models.CharField(max_length=200)
+    message = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.fid + " - " + self.sender_first_name
+    
+    def clean(self):
+        super().clean()
+        self.sender_email = self.__class__.objects.normalize_email(self.sender_email)
+    
+    def email_admins(subject, message, from_email, recipient_list, **kwargs):
+        """Send an email to admins."""
+        send_mail(subject, message, from_email, recipient_list, **kwargs)
