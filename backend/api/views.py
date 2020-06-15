@@ -307,8 +307,7 @@ class AnnounceView(viewsets.ModelViewSet):
     filterset_class = AnnounceFilter
     search_fields = ['title', 'status', 'service__uid', 'created_on', 'start_at', 'end_at']
     ordering_fields = ['title', 'status', 'service', 'created_on', 'start_at', 'end_at']
-
-
+    
 # Announce Model View
 class AnnounceNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Announce.objects.all()
