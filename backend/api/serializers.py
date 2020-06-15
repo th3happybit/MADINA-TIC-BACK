@@ -448,7 +448,7 @@ class AnnounceSerializer(serializers.ModelSerializer):
         if image :
             pass
         else: 
-            instance.image.delete() # remove the old one from filesystem
+            instance.image.delete() # remove the old one from
         return super().update(instance, validated_data)
 
     
