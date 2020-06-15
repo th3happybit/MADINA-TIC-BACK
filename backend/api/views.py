@@ -83,7 +83,7 @@ class DeclarationView(viewsets.ModelViewSet):
                      'modified_at', 'validated_at']
     filterset_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
-    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration__did', 'parent_declaration__title', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
                      'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
     ordering_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype',
                        'created_on', 'modified_at', 'validated_at']
