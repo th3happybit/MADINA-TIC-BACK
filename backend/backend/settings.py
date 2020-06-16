@@ -219,4 +219,4 @@ PUSHER_KEY = u"eb1d3c82c04cfd3f2990"
 PUSHER_SECRET = u"41a025f661325e1a7672"
 PUSHER_CLUSTER = u"eu"
 
-ADMINS = [('abdelwahed', 'a.madaniyousfi@esi-sba.dz'), ('oussama', 'o.messabih@esi-sba.dz')]
+ADMINS = [('abdelwahed', 'a.madaniyousfi@esi-sba.dz'), ('oussama', 'o.messabih@esi-sba.dz'), ('djawed', 'roiacult27@gmail.com'), ('moncef', 'm.reggam@esi-sba.dz'), ('oussamabng', 'oussamabngdev@gmail.com'), ('said', 's.bouaballah@esi-sba.dz')]
