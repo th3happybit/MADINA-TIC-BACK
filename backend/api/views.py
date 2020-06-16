@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import MultiPartParser, FileUploadParser
@@ -563,10 +563,21 @@ class DeclarationHomeView(APIView):
         else:
             serializer = DeclarationSerializer(the_filtered_qs, many=True)
         return Response(serializer.data)
+
 # TO DO iplement recaptcha for feedback form
-class FeedbackView(viewsets.ModelViewSet):
-    serializer_class = FeedBackSerializer
+# crete feedback for all
+class FeedbackCreateView(generics.CreateAPIView):
     queryset = FeedBack.objects.all()
+    serializer_class = FeedBackSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    lookup_field = 'fid'
+
+# List feedbacks for admin only 
+class FeedbackListView(generics.ListAPIView):
+    queryset = FeedBack.objects.all()
+    serializer_class = FeedBackSerializer
+    permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     lookup_field = 'fid'
 

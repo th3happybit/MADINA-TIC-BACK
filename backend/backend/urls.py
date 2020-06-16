@@ -22,7 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
-from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView, PusherAuthView, DeclarationHomeView, NotificationCleanView
+from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView, PusherAuthView, DeclarationHomeView, NotificationCleanView, FeedbackCreateView, FeedbackListView
 
 
 def empty_view(request):
@@ -44,7 +44,6 @@ router.register(r'announces_complement_demand', views.AnnounceComplementDemandVi
 router.register(r'announce_nested', views.AnnounceNestedView)
 router.register(r'declaration_nested', views.DeclarationNestedView)
 router.register(r'notifications', views.NotificationView)
-router.register(r'feedbacks', views.FeedbackView)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -70,6 +69,8 @@ urlpatterns = [
     path('api/declarations-statistics/', DeclarationStatisticsView.as_view(), name='Declarations_Statistics'),
     path('api/announces-statistics/', AnnounceStatisticsView.as_view(), name='Announces_Statistics'),
     path('api/notification-clean/', NotificationCleanView.as_view(), name='Notification_Clean'),
+    path('api/create-feedbacks/', FeedbackCreateView.as_view(), name="feedback_create"),
+    path('api/list-feedbacks/', FeedbackListView.as_view(), name="feedback_list"),
     # Beams
     path('api/beams_auth/', BeamsAuthView.as_view(), name='beams_auth'),
     # Pusher
