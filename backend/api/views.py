@@ -502,6 +502,7 @@ class PusherAuthView(APIView):
 
 
 class DeclarationHomeView(APIView):
+    authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     serializer_class = DeclarationSerializer
     permission_classes = [IsAuthenticated|ReadOnly]
     pagination_class = HomeDeclarationCustomPagination
@@ -551,10 +552,15 @@ class DeclarationHomeView(APIView):
         return queryset
 
     """exclude the declarations for the current user"""
-    def get_queryset(self):
-        user = self.request.user
-        return Declaration.objects.exclude(citizen=user)
-
+    def get_queryset(self, *args, **kwargs):
+        status = ["validated", "refused", "under_treatment"]
+        if self.request.user.is_authenticated:# check if user logged
+            user = self.request.user
+            instance = Declaration.objects.exclude(citizen=user).filter(status__in=status)
+        else:
+            instance = Declaration.objects.filter(status__in=status)# for anonyme user        
+        return instance
+    
     def get(self, request):
         the_filtered_qs = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset( the_filtered_qs)
