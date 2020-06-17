@@ -552,9 +552,12 @@ class DeclarationHomeView(APIView):
 
     """exclude the declarations for the current user"""
     def get_queryset(self):
-        user = self.request.user
-        return Declaration.objects.exclude(citizen=user)
-
+        if self.request.auth : 
+            user = self.request.user
+            return Declaration.objects.exclude(citizen=user)
+        else:
+            return Declaration.objects.all() # for anonyme user
+    
     def get(self, request):
         the_filtered_qs = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset( the_filtered_qs)
