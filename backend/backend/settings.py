@@ -169,9 +169,9 @@ CORS_ORIGIN_WHITELIST = (
 AUTH_USER_MODEL = 'api.User'
 
 # Email backend settings for Django
-EMAIL_HOST = 'in-v3.mailjet.com'
-EMAIL_HOST_USER = '6d851416d1a1bcdfc67129a87bc55525'
-EMAIL_HOST_PASSWORD = '097355601603bb3ace3955cd7f8fe52b'
+EMAIL_HOST = 'smtp-relay.sendinblue.com'
+EMAIL_HOST_USER = 'oussamamessabih02@gmail.com'
+EMAIL_HOST_PASSWORD = 'MN9mFhITLvYE3Afd'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
