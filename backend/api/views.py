@@ -101,9 +101,9 @@ class DeclarationNestedView(mixins.ListModelMixin, viewsets.GenericViewSet):
                      'modified_at', 'validated_at']
     filterset_fields = ['title', 'address', 'geo_cord', 'citizen',  'parent_declaration', 'service', 'priority', 'status', 'dtype',
                         'created_on', 'modified_at', 'validated_at']
-    search_fields = ['title', 'address', 'geo_cord', 'citizen__uid', 'citizen__first_name', 'citizen__last_name', 'parent_declaration',
-                     'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
-    ordering_fields = ['title', 'address', 'geo_cord', 'citizen', 'service', 'priority', 'status', 'dtype', 'parent_declaration',
+    search_fields = ['title', 'address', 'geo_cord', 'parent_declaration__did', 'parent_declaration__title', 'citizen__uid', 'citizen__first_name', 'citizen__last_name',
+                    'service__uid', 'priority', 'status', 'dtype__name', 'created_on', 'modified_at', 'validated_at']
+    ordering_fields = ['title', 'address', 'geo_cord', 'parent_declaration', 'citizen', 'service', 'priority', 'status', 'dtype', 'parent_declaration',
                        'created_on', 'modified_at', 'validated_at']
 
 
