@@ -315,12 +315,11 @@ class ReportSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         report_title = validated_data["title"]
         service = validated_data["service"]
+        maire = User.objects.filter(role='Maire').first()
         title = 'Rapport crée'
         body = 'le rapport :' +''+ report_title+'a été crée par' +''+service.first_name
 
         instance = super().create(validated_data)
-        instance.report.status = 'refused'
-        instance.report.save()
         # send notification 
         data = {
             'title': title,
