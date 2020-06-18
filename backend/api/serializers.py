@@ -196,7 +196,8 @@ class DeclarationSerializer(serializers.ModelSerializer):
         # channels notif
         data = {
             'title': title,
-            'body' : body
+            'body' : body,
+            'status': declaration_state
         }
         channel = u'Declaration'
         event = u'Update'
