@@ -43,10 +43,10 @@ class DeclarationTypeView(viewsets.ModelViewSet):
     serializer_class = DeclarationTypeSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     lookup_field = 'dtid'
-    filter_fields = ['name']
-    filterset_fields = ['name']
-    search_fields = ['name']
-    ordering_fields = ['name']
+    filter_fields = ['name', 'service']
+    filterset_fields = ['name', 'service']
+    search_fields = ['name', 'service']
+    ordering_fields = ['name', 'service']
 
 
 # choice filter for declaration
@@ -607,3 +607,88 @@ class NotificationCleanView(APIView):
         print(qs)
         serializer = NotificationSerializer(qs, many=True)
         return Response(serializer.data)
+
+# informations about city here
+cityinfos = {
+    1 : CityInfo(
+    name='Tlemcen',
+    name_ar = 'Tlemcen',
+    name_am = 'ⵜⵉⵍⵉⵎⵙⴰⵏ',
+    wilaya = 'Tlemcen',
+    daira = 'Tlemcen',
+    indicatif = '043',
+    population = '140 158 hab. (20081)',
+    surface = '40,11 km2',
+    maire_fullname = 'Abdelwahed Madani yousfi',
+    description = 'cartel',
+    cord = '34° 53′ 24″ nord, 1° 19′ 12″ ouest',
+    altitude = 'Min. 842 m'
+    )
+}
+class CityInfoView(viewsets.ViewSet):
+    serializer_class = CityInfoSerializer
+    permission_classes = [IsAuthenticated|ReadOnly]
+    
+    def list(self, request):
+        serializer = CityInfoSerializer(instance=cityinfos.values(), many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = CityInfoSerializer(data=request.data)
+        if serializer.is_valid():
+            city = serializer.save()
+            cityinfos[1] = city
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, pk=None):
+        try:
+            city = cityinfos[int(pk)]
+        except KeyError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = CityInfoSerializer(instance=city)
+        return Response(serializer.data)
+        
+    def update(self, request, pk=None):
+        try:
+            city = cityinfos[int(pk)]
+        except KeyError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = CityInfoSerializer(data=request.data, instance=city)
+        if serializer.is_valid():
+            city = serializer.save()
+            cityinfos[1] = city
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def partial_update(self, request, pk=None):
+        try:
+            city = cityinfos[int(pk)]
+        except KeyError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = CityInfoSerializer(data=request.data, instance=city, partial=True)
+        if serializer.is_valid():
+            city = serializer.save()
+            cityinfos[1] = city
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        try:
+            city = cityinfos[int(pk)]
+        except KeyError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        del cityinfos[int(pk)]
+        return Response(status=status.HTTP_204_NO_CONTENT)

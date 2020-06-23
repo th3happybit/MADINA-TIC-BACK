@@ -143,7 +143,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 class DeclarationTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeclarationType
-        fields = ['dtid', 'name', 'created_on']
+        fields = ['dtid', 'name', 'service', 'created_on']
         lookup_field = 'dtid'
 
 
@@ -518,4 +518,26 @@ class FeedBackSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         instance.save()
         FeedBack.email_admins(subject, message, from_email, recipient_list) 
+        return instance
+
+class CityInfoSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=50, allow_blank=True)
+    name_ar = serializers.CharField(max_length=50, allow_blank=True)
+    name_am = serializers.CharField(max_length=50, allow_blank=True)
+    wilaya = serializers.CharField(max_length=20, allow_blank=True)
+    daira = serializers.CharField(max_length=20, allow_blank=True)
+    indicatif = serializers.CharField(max_length=3, allow_blank=True)
+    population = serializers.CharField(max_length=20, allow_blank=True)
+    surface = serializers.CharField(max_length=20, allow_blank=True)
+    maire_fullname = serializers.CharField(max_length=30, allow_blank=True)
+    description = serializers.CharField(max_length=300, allow_blank=True)
+    cord = serializers.CharField(max_length=20, allow_blank=True)
+    altitude = serializers.CharField(max_length=20, allow_blank=True)
+    
+    def create(self, validated_data):
+        return CityInfo(**validated_data)
+    
+    def update(self, instance, validated_data):
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
         return instance
