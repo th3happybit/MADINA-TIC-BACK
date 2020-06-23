@@ -149,6 +149,7 @@ def wrapper(instance, filename):
 class DeclarationType(models.Model):
     dtid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200, unique=True)
+    service = models.ForeignKey(get_user_model(), related_name='service', on_delete=models.CASCADE, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -348,3 +349,11 @@ class FeedBack(models.Model):
     def email_admins(subject, message, from_email, recipient_list, **kwargs):
         """Send an email to admins."""
         send_mail(subject, message, from_email, recipient_list, **kwargs)
+
+# Non Model class
+class CityInfo(object):
+    def __init__(self, *args, **kwargs):
+        for field in ('name', 'name_ar', 'name_am', 'wilaya', 'daira', 'indicatif', 'population', 'surface', 'maire_fullname', 'description', 'cord', 'altitude'):
+            setattr(self, field, kwargs.get(field, None))
+
+    
