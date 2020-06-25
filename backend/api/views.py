@@ -19,6 +19,7 @@ from django.conf import settings
 import pusher
 from rest_framework.decorators import api_view
 import json
+from rest_pandas import PandasSimpleView, PandasCSVRenderer, PandasExcelRenderer
 # User Model View for admin access only
 class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -692,3 +693,15 @@ class CityInfoView(viewsets.ViewSet):
 
         del cityinfos[int(pk)]
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# all reports with declarations to a csv file
+class ToCSVView(PandasSimpleView):
+    serializer_class = ReportNestedSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    renderer_classes = [PandasCSVRenderer, PandasExcelRenderer]
+    permission_classes = [IsAdminUser]
+    
+    def get_data(self, request):
+        return Report.objects.all()
+    def get_pandas_filename(self, request, format):
+        return "reports_with_declarations"
