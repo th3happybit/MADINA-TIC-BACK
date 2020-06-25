@@ -22,7 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.http import HttpResponse
-from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView, PusherAuthView, DeclarationHomeView, NotificationCleanView, FeedbackCreateView, FeedbackListView
+from api.views import ConfirmEmailView, DocumentView, DocumentDetailView, UserStatisticsView, DeclarationStatisticsView, AnnounceStatisticsView, BeamsAuthView, PusherAuthView, DeclarationHomeView, NotificationCleanView, FeedbackCreateView, FeedbackListView, ToCSVView
 
 
 def empty_view(request):
@@ -45,6 +45,7 @@ router.register(r'announce_nested', views.AnnounceNestedView)
 router.register(r'declaration_nested', views.DeclarationNestedView)
 router.register(r'notifications', views.NotificationView)
 router.register(r'city', views.CityInfoView, basename='city_infos')
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -85,4 +86,6 @@ urlpatterns = [
     url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('account/reset-password/confirm/<uidb64>/<token>/', empty_view, name='password_reset_confirm'),
+    # pandas routes
+    path('api/download-csv-file/', ToCSVView.as_view(), name='download-csv-file'),
 ]

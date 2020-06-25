@@ -335,6 +335,13 @@ class ReportSerializer(serializers.ModelSerializer):
         notification.maire = maire
         notification.save()
         return instance
+# Report nested serializer .The depth option should be set to an integer value that indicates the depth of relationships that should be traversed before reverting to a flat representation.
+class ReportNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ['rid', 'declaration', 'title', 'desc', 'service', 'status', 'created_on', 'modified_at',
+                  'validated_at']
+        depth = 1
 
 # Report rejection serializer
 class ReportRejectionSerializer(serializers.ModelSerializer):
