@@ -1,12 +1,16 @@
-FROM python:3.8.2-alpine3.11
+FROM python:alpine
 
 ENV APP_DIR_NAME backend
 ENV APP_PATH /opt/$APP_DIR_NAME
 
-RUN pip install --upgrade pip
-
 RUN apk update \
   && apk add --virtual build-deps gcc make python3-dev musl-dev postgresql-dev postgresql libffi-dev
+RUN apk add --no-cache libstdc++ && \
+    apk add --no-cache g++ && \
+    ln -s /usr/include/locale.h /usr/include/xlocale.h && \
+    pip3 install numpy && \
+    pip3 install pandas
+
 #Pillow requirements
 RUN apk update \
   && apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev
