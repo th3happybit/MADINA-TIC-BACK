@@ -538,8 +538,8 @@ class CityInfoSerializer(serializers.Serializer):
     surface = serializers.CharField(max_length=20, allow_blank=True)
     maire_fullname = serializers.CharField(max_length=30, allow_blank=True)
     description = serializers.CharField(max_length=300, allow_blank=True)
-    cord = serializers.CharField(max_length=20, allow_blank=True)
-    altitude = serializers.CharField(max_length=20, allow_blank=True)
+    cord = serializers.CharField(max_length=50, allow_blank=True)
+    altitude = serializers.CharField(max_length=50, allow_blank=True)
     
     def create(self, validated_data):
         return CityInfo(**validated_data)
