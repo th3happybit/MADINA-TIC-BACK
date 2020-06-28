@@ -42,4 +42,4 @@ a django based backend for madina-tic project
 there is a cron job runs at the end of the year exactly on 31 December 23:59, that's run the backup_year.sh script and backup the year data to a file in backups dir, and removes the actual year data.
 
 but, you can as a sysadmin do that by just run the script manually, using this command:
-`sudo docker exec -it madina-tic_backend_1 sh /opt/backend/backup_year.sh`
+`sudo docker exec -it madina-tic_backend_1 sh /backup_year.sh`
