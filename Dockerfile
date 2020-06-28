@@ -25,6 +25,7 @@ COPY docker-entrypoint.sh /
 COPY create_superuser.py /
 COPY create_groups.py /
 COPY setup_perms.py /
+COPY remove_models.py /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
