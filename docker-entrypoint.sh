@@ -25,7 +25,7 @@ cat /create_groups.py | ./manage.py shell
 
 # Setup a cron schedule for end of year backup
 mkdir -p backups
-echo "59 23 31 12 * $(pwd)/backup_year.sh >> $(pwd)/backups/cron.log 2>&1
+echo "59 23 31 12 * /backup_year.sh >> $(pwd)/backups/cron.log 2>&1
 # This extra line makes it a valid cron" > scheduler.txt
 crontab scheduler.txt
 cron -f

@@ -25,9 +25,13 @@ COPY docker-entrypoint.sh /
 COPY create_superuser.py /
 COPY create_groups.py /
 COPY setup_perms.py /
-COPY remove_models.py /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+#backup year setup
+COPY remove_models.py /
+COPY backup_year.sh /
+RUN chmod +x /backup_year.sh
 
 #adding the django project
 RUN mkdir -p $APP_PATH
