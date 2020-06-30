@@ -395,10 +395,10 @@ class DeclarationStatisticsView(APIView):
         low = dict()
         status = ["validated", "refused", "under_treatment", "treated"]
         for statu in status:
-            critical[statu] = Declaration.objects.filter(priority=1).filter(status=statu).count()
-            important[statu] = Declaration.objects.filter(priority=2).filter(status=statu).count()
-            normal[statu] = Declaration.objects.filter(priority=3).filter(status=statu).count()
-            low[statu] = Declaration.objects.filter(priority=4).filter(status=statu).count()
+            critical[statu] = Declaration.objects.filter(parent_declaration__isnull=True).filter(priority=1).filter(status=statu).count() # only parents
+            important[statu] = Declaration.objects.filter(parent_declaration__isnull=True).filter(priority=2).filter(status=statu).count()
+            normal[statu] = Declaration.objects.filter(parent_declaration__isnull=True).filter(priority=3).filter(status=statu).count()
+            low[statu] = Declaration.objects.filter(parent_declaration__isnull=True).filter(priority=4).filter(status=statu).count()
             
         data = {
             'critical': critical,
