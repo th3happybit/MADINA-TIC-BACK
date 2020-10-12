@@ -208,6 +208,7 @@ SWAGGER_SETTINGS = {
             'type': 'basic'
         }
     },
+    "DEFAULT_GENERATOR_CLASS": "rest_framework.schemas.generators.BaseSchemaGenerator",
 }
 
 REDOC_SETTINGS = {
