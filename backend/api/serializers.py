@@ -102,7 +102,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     password1 = serializers.CharField(write_only=True)
     date_of_birth = serializers.DateField(required=True)
     address = serializers.CharField(required=True)
-    national_id = serializers.CharField( blank=True, max_length=200)
+    national_id = serializers.CharField(allow_blank=True, max_length=200)
 
     def get_cleaned_data(self):
         super(CustomRegisterSerializer, self).get_cleaned_data()
