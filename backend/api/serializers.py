@@ -102,6 +102,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     password1 = serializers.CharField(write_only=True)
     date_of_birth = serializers.DateField(required=True)
     address = serializers.CharField(required=True)
+    national_id = serializers.CharField(unique=True, blank=True, max_length=200)
 
     def get_cleaned_data(self):
         super(CustomRegisterSerializer, self).get_cleaned_data()
@@ -114,6 +115,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             'password1': self.validated_data.get('password1', ''),
             'date_of_birth': self.validated_data.get('date_of_birth', ''),
             'address': self.validated_data.get('address', ''),
+            'national_id': self.validated_data.get('national_id', ''),
         }
 
     def save(self, request):
@@ -126,6 +128,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.phone = self.cleaned_data.get('phone')
         user.date_of_birth = self.cleaned_data.get('date_of_birth')
         user.address = self.cleaned_data.get('address')
+        user.national_id = self.cleaned_data.get('national_id')
         user.save()
         clients.user_set.add(user)
         return user
