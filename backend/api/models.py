@@ -124,7 +124,7 @@ class User(AbstractUser):
             'Designates whether the notification for this user has seen. '
         ),
     )
-    national_id = models.CharField(max_length=200, blank=True)
+    national_id = models.CharField(max_length=200, blank=True, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
