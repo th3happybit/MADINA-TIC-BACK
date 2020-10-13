@@ -554,7 +554,7 @@ class DeclarationHomeView(APIView):
 
     """exclude the declarations for the current user"""
     def get_queryset(self, *args, **kwargs):
-        status = ["validated", "refused", "treated", "under_treatment"]
+        status = ["validated", "treated", "under_treatment"]
         if self.request.user.is_authenticated:
             user = self.request.user
             instance = Declaration.objects.exclude(citizen=user).filter(status__in=status)
